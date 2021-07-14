@@ -8,6 +8,23 @@
     <artifactId>toolkit</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <name>Toolkit</name>
+    <description>Common toolkit</description>
+
+    <organization>
+        <name>THRAEX</name>
+        <url>https://github.com/THRAEX-70</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>鬼王</name>
+            <email>THRAEX@aliyun.com</email>
+            <organization>${project.organization.name}</organization>
+            <organizationUrl>${project.organization.url}</organizationUrl>
+        </developer>
+    </developers>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -15,11 +32,6 @@
     </properties>
 
     <dependencies>
-        <!--<dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>30.1.1-jre</version>
-        </dependency>-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -27,4 +39,12 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub THRAEX Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/thraex-70/toolkit</url>
+        </repository>
+    </distributionManagement>
 </project>
