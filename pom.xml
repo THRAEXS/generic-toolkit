@@ -6,7 +6,7 @@
 
     <groupId>org.thraex.toolkit</groupId>
     <artifactId>toolkit</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>Toolkit</name>
     <description>Common toolkit</description>
@@ -39,12 +39,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub THRAEX Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/thraex-70/toolkit</url>
-        </repository>
-    </distributionManagement>
 </project>
