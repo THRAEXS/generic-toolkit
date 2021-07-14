@@ -1,4 +1,4 @@
-package org.thraex.toolkit.base;
+package org.thraex.toolkit.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
