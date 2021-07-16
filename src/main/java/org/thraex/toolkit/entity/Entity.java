@@ -10,15 +10,15 @@ import java.util.function.Supplier;
  */
 public class Entity<E extends Entity<?>> implements Serializable {
 
-    protected String id;
+    private String id;
 
-    protected String createBy;
+    private String createBy;
 
-    protected LocalDateTime createTime;
+    private LocalDateTime createTime;
 
-    protected String updateBy;
+    private String updateBy;
 
-    protected LocalDateTime updateTime;
+    private LocalDateTime updateTime;
 
     public String getId() {
         return id;
