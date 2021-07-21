@@ -13,7 +13,7 @@
 
     <organization>
         <name>THRAEX</name>
-        <url>https://github.com/THRAEX-70</url>
+        <url>https://github.com/THRAEXS</url>
     </organization>
 
     <developers>
@@ -32,6 +32,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.3.7.Final</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

@@ -1,40 +1,39 @@
 package org.thraex.toolkit.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.function.Supplier;
 
 /**
  * @author 鬼王
- * @date 2019/07/13 16:32
+ * @date 2021/07/16 16:45
  */
-public class Entity<E extends Entity<?>> implements Serializable {
+@MappedSuperclass
+public class JpaEntity<E extends JpaEntity<E>> implements Serializable {
 
+    @Id
+    @Column(length = 36)
+    @GeneratedValue(generator= "uuidGenerator")
+    @GenericGenerator(name = "uuidGenerator", strategy = "uuid2")
     private String id;
 
+    @Column(length = 36)
     private String createBy;
 
     private LocalDateTime createTime;
 
+    @Column(length = 36)
     private String updateBy;
 
     private LocalDateTime updateTime;
 
     public String getId() {
         return id;
-    }
-
-    public Entity() { }
-
-    public Entity(String createBy, LocalDateTime createTime) {
-        this.createBy = createBy;
-        this.createTime = createTime;
-    }
-
-    public Entity(String id, String updateBy, LocalDateTime updateTime) {
-        this.id = id;
-        this.updateBy = updateBy;
-        this.updateTime = updateTime;
     }
 
     public E setId(String id) {
@@ -76,18 +75,6 @@ public class Entity<E extends Entity<?>> implements Serializable {
     public E setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
         return (E) this;
-    }
-
-    public E snapshot(String by) {
-        LocalDateTime now = LocalDateTime.now();
-
-        return (E) (this.id == null || this.id.trim().length() == 0
-                ? this.setCreateBy(by).setCreateTime(now)
-                : this.setUpdateBy(by).setUpdateTime(now));
-    }
-
-    public E snapshot(Supplier<String> by) {
-        return this.snapshot(by.get());
     }
 
 }
