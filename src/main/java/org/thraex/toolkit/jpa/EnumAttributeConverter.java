@@ -8,13 +8,12 @@ import java.util.Optional;
  * @author 鬼王
  * @date 2021/07/22 12:11
  */
-public abstract class EnumAttributeConverter<X extends EnumAttributeOperator, Y> implements AttributeConverter<X, Y> {
+public abstract class EnumAttributeConverter<X extends EnumAttributeOperator<Y>, Y> implements AttributeConverter<X, Y> {
 
     @Override
     public Y convertToDatabaseColumn(X attribute) {
         return Optional.ofNullable(attribute)
                 .map(X::value)
-                .map(v -> (Y) v)
                 .orElse(null);
     }
 
