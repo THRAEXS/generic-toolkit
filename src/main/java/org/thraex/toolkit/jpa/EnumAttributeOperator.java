@@ -15,7 +15,7 @@ public interface EnumAttributeOperator<Y> {
         if (Objects.isNull(values) || Objects.isNull(value)) { return null; }
 
         return Stream.of(values)
-                .filter(it -> it.value() == value)
+                .filter(it -> it.value().equals(value))
                 .findFirst()
                 .orElse(null);
     }
