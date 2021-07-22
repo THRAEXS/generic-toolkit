@@ -16,10 +16,13 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public class JpaEntity<E extends JpaEntity<E>> implements Serializable {
 
+    /**
+     * @see {@link org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory}
+     */
     @Id
     @Column(length = 36)
-    @GeneratedValue(generator= "uuidGenerator")
-    @GenericGenerator(name = "uuidGenerator", strategy = "uuid2")
+    @GeneratedValue(generator= "idGenerator")
+    @GenericGenerator(name = "idGenerator", strategy = "uuid2")
     private String id;
 
     @Column(length = 36)

@@ -1,12 +1,12 @@
 package org.thraex.toolkit.constant;
 
-import java.util.Arrays;
+import org.thraex.toolkit.jpa.IntegerEnumAttributeOperator;
 
 /**
  * @author 鬼王
  * @date 2021/07/14 17:12
  */
-public enum Whether {
+public enum Whether implements IntegerEnumAttributeOperator {
 
     YES(1),
     NO(0);
@@ -17,20 +17,18 @@ public enum Whether {
         this.value = value;
     }
 
-    public int value() {
+    @Override
+    public Integer value() {
         return this.value;
     }
 
-    public static Whether valueOf(final int value) {
-        return Arrays.stream(values())
-                .filter(it -> it.value == value)
-                .findFirst()
-                .orElse(null);
+    public static Whether of(Integer value) {
+        return IntegerEnumAttributeOperator.find(values(), value);
     }
 
     @Override
     public String toString() {
-        return this.value + " " + name();
+        return String.format("%s %d", name(), value);
     }
 
 }
