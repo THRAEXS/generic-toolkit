@@ -16,21 +16,23 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public class JpaEntity<E extends JpaEntity<E>> implements Serializable {
 
+    protected static final int IDENTIFIER_LENGTH = 36;
+
     /**
      * @see {@link org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory}
      */
     @Id
-    @Column(length = 36)
+    @Column(length = IDENTIFIER_LENGTH)
     @GeneratedValue(generator= "idGenerator")
     @GenericGenerator(name = "idGenerator", strategy = "uuid2")
     private String id;
 
-    @Column(length = 36)
+    @Column(length = IDENTIFIER_LENGTH)
     private String createBy;
 
     private LocalDateTime createTime;
 
-    @Column(length = 36)
+    @Column(length = IDENTIFIER_LENGTH)
     private String updateBy;
 
     private LocalDateTime updateTime;
