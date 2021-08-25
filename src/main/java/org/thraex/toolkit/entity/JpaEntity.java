@@ -14,25 +14,23 @@ import java.time.LocalDateTime;
  * @date 2021/07/16 16:45
  */
 @MappedSuperclass
-public class JpaEntity<E extends JpaEntity<E>> implements Serializable {
-
-    protected static final int IDENTIFIER_LENGTH = 36;
+public abstract class JpaEntity<E extends JpaEntity<E>> implements Serializable {
 
     /**
      * @see {@link org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory}
      */
     @Id
-    @Column(length = IDENTIFIER_LENGTH)
+    @Column(length = 36)
     @GeneratedValue(generator= "idGenerator")
     @GenericGenerator(name = "idGenerator", strategy = "uuid2")
     private String id;
 
-    @Column(length = IDENTIFIER_LENGTH)
+    @Column(length = 36)
     private String createBy;
 
     private LocalDateTime createTime;
 
-    @Column(length = IDENTIFIER_LENGTH)
+    @Column(length = 36)
     private String updateBy;
 
     private LocalDateTime updateTime;
