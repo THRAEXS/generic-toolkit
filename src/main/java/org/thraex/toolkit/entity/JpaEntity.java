@@ -1,5 +1,7 @@
 package org.thraex.toolkit.entity;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
@@ -78,6 +80,11 @@ public abstract class JpaEntity<E extends JpaEntity<E>> implements Serializable 
     public E setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
         return (E) this;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 
 }
