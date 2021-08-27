@@ -1,12 +1,17 @@
 package org.thraex.toolkit.aop;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import org.thraex.toolkit.entity.JpaEntity;
+
+import java.time.LocalDateTime;
+import java.util.stream.Stream;
 
 /**
  * @author 鬼王
@@ -32,7 +37,17 @@ public class JpaEntityAspect {
     }
 
     private void execute(Object[] args) {
-        debug(() -> logger.debug("before execute...."));
+        Object[] parameters = ArrayUtils.nullToEmpty(args);
+        debug(() -> logger.debug("Number of parameters: {}", parameters.length));
+
+        Stream.of(parameters).forEach(it -> {
+            JpaEntity e = (JpaEntity) it;
+            if (StringUtils.isBlank(e.getId())) {
+                e.setCreateBy("HANZO").setCreateTime(LocalDateTime.now());
+            } else {
+                e.setUpdateBy("THRAEX").setUpdateTime(LocalDateTime.now());
+            }
+        });
     }
 
     private boolean startsWithSave(String methodName) {

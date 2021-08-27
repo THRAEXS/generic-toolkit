@@ -1,15 +1,14 @@
 package org.thraex.toolkit.util;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.util.Assert;
 
 import java.beans.FeatureDescriptor;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -28,7 +27,7 @@ public abstract class BeanUtils extends org.springframework.beans.BeanUtils {
         Assert.notNull(source, "Source must not be null");
 
         BeanWrapper wrapper = new BeanWrapperImpl(source);
-        List<String> ignores = Optional.ofNullable(ignoreProperties).map(Arrays::asList).orElse(Collections.emptyList());
+        List<String> ignores = Arrays.asList(ArrayUtils.nullToEmpty(ignoreProperties));
         Predicate<String> isNull = n -> !ignores.contains(n) && Objects.isNull(wrapper.getPropertyValue(n));
 
         return Stream.of(wrapper.getPropertyDescriptors())
