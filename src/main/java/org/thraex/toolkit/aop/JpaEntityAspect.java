@@ -14,9 +14,19 @@ import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 /**
+ * TODO:
+ * <pre>
+ * 统一设置创建人/创建时间/更新人/更新时间
+ * 1. {@code @Pointcut("target(javax.persistence.EntityManager)")} startsWithSave
+ * 2. {@code @Pointcut("target(org.springframework.data.repository.Repository)")}: persist/merge
+ * 3. {@code @PrePersist} / {@code @PreUpdate}: by???
+ * 4. {@code @EntityListeners(AuditingEntityListener.class)}: {@code @EnableJpaAuditing} / {@code @CreatedBy} / {@code @CreatedDate} ...
+ * </pre>
+ * @deprecated See {@link JpaEntity#prePersist()} and {@link JpaEntity#preUpdate()}
  * @author 鬼王
  * @date 2021/08/24 17:04
  */
+@Deprecated
 @Aspect
 public class JpaEntityAspect {
 
@@ -43,9 +53,9 @@ public class JpaEntityAspect {
         Stream.of(parameters).forEach(it -> {
             JpaEntity e = (JpaEntity) it;
             if (StringUtils.isBlank(e.getId())) {
-                e.setCreateBy("HANZO").setCreateTime(LocalDateTime.now());
+                e.setCreatedBy("CREATE-BY").setModifiedDate(LocalDateTime.now());
             } else {
-                e.setUpdateBy("THRAEX").setUpdateTime(LocalDateTime.now());
+                e.setModifiedBy("UPDATE-BY").setModifiedDate(LocalDateTime.now());
             }
         });
     }

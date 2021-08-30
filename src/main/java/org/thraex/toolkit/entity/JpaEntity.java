@@ -3,8 +3,14 @@ package org.thraex.toolkit.entity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
@@ -16,6 +22,7 @@ import java.time.LocalDateTime;
  * @date 2021/07/16 16:45
  */
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public abstract class JpaEntity<E extends JpaEntity<E>> implements Serializable {
 
     /**
@@ -28,14 +35,18 @@ public abstract class JpaEntity<E extends JpaEntity<E>> implements Serializable 
     private String id;
 
     @Column(length = 36)
-    private String createBy;
+    @CreatedBy
+    private String createdBy;
 
-    private LocalDateTime createTime;
+    @CreatedDate
+    private LocalDateTime createdDate;
 
     @Column(length = 36)
-    private String updateBy;
+    @LastModifiedBy
+    private String modifiedBy;
 
-    private LocalDateTime updateTime;
+    @LastModifiedDate
+    private LocalDateTime modifiedDate;
 
     public String getId() {
         return id;
@@ -46,39 +57,39 @@ public abstract class JpaEntity<E extends JpaEntity<E>> implements Serializable 
         return (E) this;
     }
 
-    public String getCreateBy() {
-        return createBy;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public E setCreateBy(String createBy) {
-        this.createBy = createBy;
+    public E setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
         return (E) this;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 
-    public E setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
+    public E setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
         return (E) this;
     }
 
-    public String getUpdateBy() {
-        return updateBy;
+    public String getModifiedBy() {
+        return modifiedBy;
     }
 
-    public E setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
+    public E setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
         return (E) this;
     }
 
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
+    public LocalDateTime getModifiedDate() {
+        return modifiedDate;
     }
 
-    public E setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
+    public E setModifiedDate(LocalDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
         return (E) this;
     }
 
