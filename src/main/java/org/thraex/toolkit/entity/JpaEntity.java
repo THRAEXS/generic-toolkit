@@ -32,21 +32,21 @@ public abstract class JpaEntity<E extends JpaEntity<E>> implements Serializable 
     @Column(length = 36)
     @GeneratedValue(generator= "idGenerator")
     @GenericGenerator(name = "idGenerator", strategy = "uuid2")
-    private String id;
+    protected String id;
 
     @Column(length = 36)
     @CreatedBy
-    private String createdBy;
+    protected String createdBy;
 
     @CreatedDate
-    private LocalDateTime createdDate;
+    protected LocalDateTime createdDate;
 
     @Column(length = 36)
     @LastModifiedBy
-    private String modifiedBy;
+    protected String modifiedBy;
 
     @LastModifiedDate
-    private LocalDateTime modifiedDate;
+    protected LocalDateTime modifiedDate;
 
     public String getId() {
         return id;
