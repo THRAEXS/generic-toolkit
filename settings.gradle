@@ -1,3 +1,11 @@
 rootProject.name = 'generic-toolkit'
-include('lib-toolkit')
-include('lib-dmpp-generic')
+include('lib-toolkit', 'lib-dmpp-generic')
+
+/*String prefix = 'lib-'
+file('.').eachDir { dir ->
+    if (dir.name.startsWith(prefix)) {
+     String name = dir.name.replace('lib-', '')
+     include(name)
+     project(":${name}").projectDir = dir
+    }
+}*/

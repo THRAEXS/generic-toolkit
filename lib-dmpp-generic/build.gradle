@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.thraex.toolkit'
-version '0.0.1-SNAPSHOT'
+version '1.0.0-SNAPSHOT'
 
 java {
     def JDK_VERSION = JavaVersion.VERSION_17
@@ -21,8 +21,7 @@ repositories {
 }
 
 dependencies {
-    api 'org.bitbucket.b_c:jose4j:0.7.11'
-    implementation 'mysql:mysql-connector-java:8.0.21'
+    api project("${getParent().getDisplayName().contains(':') ? ":${getParent().getName()}" : ''}:lib-toolkit")
 }
 
 publishing {
