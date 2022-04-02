@@ -1,0 +1,66 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+group 'org.thraex.toolkit'
+version '1.0.0-SNAPSHOT'
+
+java {
+    def JDK_VERSION = JavaVersion.VERSION_17
+    sourceCompatibility = JDK_VERSION
+    targetCompatibility = JDK_VERSION
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'org.springframework.data:spring-data-jpa:2.1.5.RELEASE'
+    implementation 'org.hibernate:hibernate-core:5.3.7.Final'
+    testImplementation 'junit:junit:4.13.2'
+}
+
+publishing {
+    publications {
+        library(MavenPublication) {
+//            artifactId = rootProject.name
+            from components.java
+        }
+
+        mavenJava(MavenPublication) {
+            pom {
+                name = 'toolkit'
+                description = 'Toolkit library'
+
+                developers {
+                    developer {
+                        id = 'O70'
+                        name = '鬼王'
+                        email = 'THRAEX@aliyun.com'
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+//            url = uri("${buildDir}/publishing-repository")
+            url = layout.buildDirectory.dir('publishing-repository')
+//            url = uri('http://localhost:9081/repository/maven-snapshots/')
+            /*url = 'http://localhost:9081/repository/maven-snapshots/'
+            allowInsecureProtocol = true
+            credentials {
+                username nexusUsername
+                password nexusPassword
+            }*/
+        }
+    }
+}

@@ -1,0 +1,55 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+group 'org.thraex.toolkit'
+version '0.0.1-SNAPSHOT'
+
+java {
+    def JDK_VERSION = JavaVersion.VERSION_17
+    sourceCompatibility = JDK_VERSION
+    targetCompatibility = JDK_VERSION
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api 'org.bitbucket.b_c:jose4j:0.7.11'
+    implementation 'mysql:mysql-connector-java:8.0.21'
+}
+
+publishing {
+    publications {
+        library(MavenPublication) {
+            from components.java
+        }
+
+        mavenJava(MavenPublication) {
+            pom {
+                name = 'dmpp-generic'
+                description = 'DMPP generic library'
+
+                developers {
+                    developer {
+                        id = 'O70'
+                        name = '鬼王'
+                        email = 'THRAEX@aliyun.com'
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir('publishing-repository')
+        }
+    }
+}

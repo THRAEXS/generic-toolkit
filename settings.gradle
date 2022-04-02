@@ -1,1 +1,3 @@
 rootProject.name = 'generic-toolkit'
+include('lib-toolkit')
+include('lib-dmpp-generic')
