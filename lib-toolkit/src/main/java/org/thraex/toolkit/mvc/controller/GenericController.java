@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.thraex.toolkit.entity.SoftEntity;
+import org.thraex.toolkit.entity.JpaEntity;
 import org.thraex.toolkit.mvc.service.GenericService;
 import org.thraex.toolkit.response.ResponseResult;
 
@@ -18,7 +18,7 @@ import java.util.Optional;
  * @author 鬼王
  * @date 2022/03/18 13:51
  */
-public class GenericController<T extends SoftEntity<T>, S extends GenericService<T, ?>> {
+public class GenericController<T extends JpaEntity<T>, S extends GenericService<T, ?>> {
 
     @Autowired
     protected S service;

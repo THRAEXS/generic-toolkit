@@ -9,7 +9,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
 import org.springframework.util.Assert;
-import org.thraex.toolkit.entity.SoftEntity;
+import org.thraex.toolkit.entity.JpaEntity;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -20,7 +20,7 @@ import java.util.function.Supplier;
  * @author 鬼王
  * @date 2022/03/16 18:43
  */
-public class GenericService<T extends SoftEntity<T>, R extends JpaRepositoryImplementation<T, String>> {
+public class GenericService<T extends JpaEntity<T>, R extends JpaRepositoryImplementation<T, String>> {
 
     public static final String[] IGNORED_PATHS_UPDATE = {
             "id",
