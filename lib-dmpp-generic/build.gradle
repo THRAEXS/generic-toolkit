@@ -48,7 +48,15 @@ publishing {
 
     repositories {
         maven {
+//            url = uri("${buildDir}/publishing-repository")
             url = layout.buildDirectory.dir('publishing-repository')
+//            url = uri('http://localhost:9081/repository/maven-snapshots/')
+            /*url = 'http://localhost:9081/repository/maven-snapshots/'
+            allowInsecureProtocol = true
+            credentials {
+                username nexusUsername
+                password nexusPassword
+            }*/
         }
     }
 }

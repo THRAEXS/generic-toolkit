@@ -1,5 +1,6 @@
 package org.thraex.toolkit.entity;
 
+import jakarta.persistence.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.GenericGenerator;
@@ -9,12 +10,6 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -23,7 +18,7 @@ import java.time.LocalDateTime;
  */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class JpaEntity<E extends JpaEntity<E>> implements Serializable {
+public abstract class JpaEntity<T extends JpaEntity<T>> {
 
     /**
      * @see {@link org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory}
@@ -52,45 +47,45 @@ public abstract class JpaEntity<E extends JpaEntity<E>> implements Serializable 
         return id;
     }
 
-    public E setId(String id) {
+    public T setId(String id) {
         this.id = id;
-        return (E) this;
+        return (T) this;
     }
 
     public String getCreatedBy() {
         return createdBy;
     }
 
-    public E setCreatedBy(String createdBy) {
+    public T setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
-        return (E) this;
+        return (T) this;
     }
 
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public E setCreatedDate(LocalDateTime createdDate) {
+    public T setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
-        return (E) this;
+        return (T) this;
     }
 
     public String getModifiedBy() {
         return modifiedBy;
     }
 
-    public E setModifiedBy(String modifiedBy) {
+    public T setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
-        return (E) this;
+        return (T) this;
     }
 
     public LocalDateTime getModifiedDate() {
         return modifiedDate;
     }
 
-    public E setModifiedDate(LocalDateTime modifiedDate) {
+    public T setModifiedDate(LocalDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
-        return (E) this;
+        return (T) this;
     }
 
     @Override

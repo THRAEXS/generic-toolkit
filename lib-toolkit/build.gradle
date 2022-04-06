@@ -1,6 +1,5 @@
 plugins {
     id 'java-library'
-    id 'maven-publish'
 }
 
 group 'org.thraex.toolkit'
@@ -17,50 +16,14 @@ tasks.withType(JavaCompile) {
 }
 
 repositories {
+    maven { url 'https://repo.spring.io/milestone' }
     mavenCentral()
 }
 
+// TODO: Opt dependencies
 dependencies {
     api 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'org.springframework.data:spring-data-jpa:2.1.5.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:3.0.0-M1'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.0.0-M1'
     implementation 'org.hibernate:hibernate-core:5.3.7.Final'
-    testImplementation 'junit:junit:4.13.2'
-}
-
-publishing {
-    publications {
-        library(MavenPublication) {
-//            artifactId = rootProject.name
-            from components.java
-        }
-
-        mavenJava(MavenPublication) {
-            pom {
-                name = 'toolkit'
-                description = 'Toolkit library'
-
-                developers {
-                    developer {
-                        id = 'O70'
-                        name = '鬼王'
-                        email = 'THRAEX@aliyun.com'
-                    }
-                }
-            }
-        }
-    }
-
-    repositories {
-        maven {
-//            url = uri("${buildDir}/publishing-repository")
-            url = layout.buildDirectory.dir('publishing-repository')
-//            url = uri('http://localhost:9081/repository/maven-snapshots/')
-            /*url = 'http://localhost:9081/repository/maven-snapshots/'
-            allowInsecureProtocol = true
-            credentials {
-                username nexusUsername
-                password nexusPassword
-            }*/
-        }
-    }
 }

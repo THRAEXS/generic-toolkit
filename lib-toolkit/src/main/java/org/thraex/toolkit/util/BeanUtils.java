@@ -20,7 +20,7 @@ public abstract class BeanUtils extends org.springframework.beans.BeanUtils {
 
     public static void copyProperties(Object source, Object target, boolean ignoreNull, String... canNullProperties) {
         String[] ignoreProperties = ignoreNull ? getNullProperties(source, canNullProperties) : null;
-        BeanUtils.copyProperties(source, target, ignoreProperties);
+        copyProperties(source, target, ignoreProperties);
     }
 
     public static String[] getNullProperties(Object source, String... ignoreProperties) {
