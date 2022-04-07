@@ -18,7 +18,7 @@ import java.util.Optional;
  * @author 鬼王
  * @date 2022/03/18 13:51
  */
-public class GenericController<T extends JpaEntity<T>, S extends GenericService<T, ?>> {
+public abstract class GenericController<T extends JpaEntity<T>, S extends GenericService<T, ?>> {
 
     @Autowired
     protected S service;
