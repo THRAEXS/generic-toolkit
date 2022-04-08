@@ -25,6 +25,8 @@ public class ResponseResult<T> implements Serializable {
 
     private String message;
 
+    public ResponseResult() {}
+
     public ResponseResult(ResponseStatus status, T data, String message) {
         Assert.notNull(status, STATUS_MUST_NOT_BE_NULL);
 
@@ -94,13 +96,6 @@ public class ResponseResult<T> implements Serializable {
 
     public ResponseResult<T> setCode(Integer code) {
         this.code = code;
-        return this;
-    }
-
-    public ResponseResult<T> setCode(ResponseStatus status) {
-        Assert.notNull(status, STATUS_MUST_NOT_BE_NULL);
-
-        this.code = status.value();
         return this;
     }
 
