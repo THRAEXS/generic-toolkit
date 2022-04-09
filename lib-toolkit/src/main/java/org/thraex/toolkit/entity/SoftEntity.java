@@ -1,5 +1,6 @@
 package org.thraex.toolkit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.MappedSuperclass;
 
 /**
@@ -9,6 +10,7 @@ import jakarta.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class SoftEntity<T extends SoftEntity<T>> extends JpaEntity<T> {
 
+    @JsonIgnore
     private boolean deleted;
 
     public boolean isDeleted() {
