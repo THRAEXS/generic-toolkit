@@ -27,8 +27,11 @@ public abstract class AbstractTree<T extends AbstractTree<T>>
 
     private String level;
 
+    /**
+     * TODO: Ignore parent ???
+     */
     @OneToOne
-    @JsonIgnoreProperties("children")
+    @JsonIgnoreProperties({ "parent", "children" })
     private T parent;
 
     private boolean enabled;
