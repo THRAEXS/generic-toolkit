@@ -1,0 +1,32 @@
+allprojects {
+    apply plugin: 'java-library'
+
+    group 'org.thraex.toolkit'
+    version '1.0.0-SNAPSHOT'
+
+    java {
+        def JDK_VERSION = JavaVersion.VERSION_17
+        sourceCompatibility = JDK_VERSION
+        targetCompatibility = JDK_VERSION
+
+        withSourcesJar()
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    tasks.named('jar') {
+        manifest {
+            attributes('Implementation-Title': project.name,
+                    'Implementation-Version': project.version)
+        }
+    }
+
+    repositories {
+        maven {
+            url 'https://repo.spring.io/milestone'
+        }
+        mavenCentral()
+    }
+}

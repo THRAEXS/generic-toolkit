@@ -1,26 +1,27 @@
 plugins {
-    id 'java-library'
+//    id 'java-library'
+//    id 'maven-publish'
 }
 
-group 'org.thraex.toolkit'
-version '1.0.0-SNAPSHOT'
+//group 'org.thraex.toolkit'
+//version '1.0.0-SNAPSHOT'
 
-java {
-    def JDK_VERSION = JavaVersion.VERSION_17
-    sourceCompatibility = JDK_VERSION
-    targetCompatibility = JDK_VERSION
-}
+//java {
+//    def JDK_VERSION = JavaVersion.VERSION_17
+//    sourceCompatibility = JDK_VERSION
+//    targetCompatibility = JDK_VERSION
+//}
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
+//tasks.withType(JavaCompile) {
+//    options.encoding = 'UTF-8'
+//}
 
-repositories {
-    maven {
-        url 'https://repo.spring.io/milestone'
-    }
-    mavenCentral()
-}
+//repositories {
+//    maven {
+//        url 'https://repo.spring.io/milestone'
+//    }
+//    mavenCentral()
+//}
 
 // TODO: Opt dependencies
 dependencies {
@@ -29,3 +30,23 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.0.0-M2'
 //    implementation 'org.hibernate:hibernate-core:5.3.7.Final'
 }
+
+//publishing {
+//    publications {
+//        library(MavenPublication) {
+//            from components.java
+//        }
+//    }
+//
+//    repositories {
+//        maven {
+////            url = layout.buildDirectory.dir('publishing-repository')
+//            url = nexusUrl
+//            allowInsecureProtocol = true
+//            credentials {
+//                username nexusUsername
+//                password nexusPassword
+//            }
+//        }
+//    }
+//}
