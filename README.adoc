@@ -101,3 +101,10 @@ publishing {
 ----
 $ ./gradlew clean publish
 ----
+
+=== link:https://docs.gradle.org/current/userguide/viewing_debugging_dependencies.html[Viewing and debugging dependencies]
+
+[,bash]
+----
+$ gradle -q dependencies --configuration compileClasspath
+----

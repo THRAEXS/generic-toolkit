@@ -57,7 +57,6 @@ subprojects {
             maven {
 //            url = layout.buildDirectory.dir('publishing-repository')
                 url = nexusUrl
-                allowInsecureProtocol = true
                 credentials {
                     username nexusUsername
                     password nexusPassword
