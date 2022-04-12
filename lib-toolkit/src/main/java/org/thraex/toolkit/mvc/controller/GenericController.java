@@ -1,5 +1,6 @@
 package org.thraex.toolkit.mvc.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,13 +31,13 @@ public abstract class GenericController<T extends JpaEntity<T>, S extends Generi
     }
 
     @PostMapping
-    public ResponseResult<T> save(@RequestBody T entity) {
+    public ResponseResult<T> save(@Valid @RequestBody T entity) {
         T saved = service.save(entity);
         return ResponseResult.ok(saved);
     }
 
     @PutMapping
-    public ResponseResult<T> update(@RequestBody T entity) {
+    public ResponseResult<T> update(@Valid @RequestBody T entity) {
         Assert.notNull(entity.getId(), "The given entity id must not be null!");
         return save(entity);
     }
