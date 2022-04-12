@@ -1,64 +1,8 @@
-plugins {
-//    id 'java-library'
-    id 'maven-publish'
-}
-
-//group 'org.thraex.toolkit'
-//version '1.0.0-SNAPSHOT'
-
-//java {
-//    def JDK_VERSION = JavaVersion.VERSION_17
-//    sourceCompatibility = JDK_VERSION
-//    targetCompatibility = JDK_VERSION
-//}
-
-//tasks.withType(JavaCompile) {
-//    options.encoding = 'UTF-8'
-//}
-
-//repositories {
-//    mavenCentral()
-//}
-
 dependencies {
+    api 'mysql:mysql-connector-java:8.0.28'
+    api 'org.apache.commons:commons-lang3:3.12.0'
     api 'com.google.guava:guava:23.5-jre'
-    api project("${getParent().getDisplayName().contains(':') ? ":${getParent().getName()}" : ''}:lib-toolkit")
-//    api project(':lib-toolkit')
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.0.0-M2'
-//    api 'org.thraex.toolkit:lib-toolkit:1.0.0-SNAPSHOT'
+    api 'cn.hutool:hutool-all:5.8.0.M2'
+    api project(':lib-toolkit')
 }
 
-publishing {
-    publications {
-        library(MavenPublication) {
-            from components.java
-        }
-
-        /*mavenJava(MavenPublication) {
-            pom {
-                name = 'dmpp-generic'
-                description = 'DMPP generic library'
-
-                developers {
-                    developer {
-                        id = 'O70'
-                        name = '鬼王'
-                        email = 'THRAEX@aliyun.com'
-                    }
-                }
-            }
-        }*/
-    }
-
-    repositories {
-        maven {
-//            url = layout.buildDirectory.dir('publishing-repository')
-            url = nexusUrl
-            allowInsecureProtocol = true
-            credentials {
-                username nexusUsername
-                password nexusPassword
-            }
-        }
-    }
-}

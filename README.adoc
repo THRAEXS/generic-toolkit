@@ -1,0 +1,103 @@
+:toc-title: Generic Toolkit
+:source-highlighter: rouge
+
+= {toc-title}
+
+== Local Dev
+
+=== Configuration
+
+.dmpp-pedestal settings.gradle
+[,groovy]
+----
+includeFlat('generic-toolkit')
+include('generic-toolkit:lib-toolkit', 'generic-toolkit:lib-dmpp-generic')
+----
+
+.dmpp-pedestal build.gradle
+[,groovy]
+----
+dependencies {
+    implementation project(':generic-toolkit:lib-dmpp-generic')
+}
+----
+
+.lib-dmpp-generic build.gradle
+[,groovy]
+----
+dependencies {
+    // 同时兼容dmpp-pedestal与generic-toolkit构建
+    api project("${getParent().getDisplayName().contains(':') ? ":${getParent().getName()}" : ''}:lib-toolkit")
+}
+----
+
+== Publishing Libraries
+
+* link:https://docs.gradle.org/current/samples/index.html[Sample Index]
+* link:https://docs.gradle.org/current/samples/sample_building_java_libraries.html[Building Java Libraries Sample]
+* link:https://docs.gradle.org/current/userguide/publishing_setup.html[Publishing a project as module]
+
+=== Nexus
+
+[,bash]
+----
+$ docker run -d -p 9081:8081 --name c-nexus sonatype/nexus3
+$ docker run -d -p 9081:8081 --name c-nexus -v $PWD/nexus-data:/nexus-data sonatype/nexus3
+----
+
+=== Configuration
+
+.$USER_HOME/.gradle/gradle.properties
+[,groovy]
+----
+nexusUrl='http://localhost:9081/repository/maven-snapshots/'
+nexusUsername=admin
+nexusPassword=hanzo
+----
+
+.$USER_HOME/.gradle/init.gradle
+[,groovy]
+----
+allprojects {
+    repositories {
+        maven {
+            name 'Local-Nexus'
+            url 'http://localhost:9081/repository/maven-public/'
+            allowInsecureProtocol(true)
+        }
+        mavenLocal()
+    }
+}
+----
+
+.build.gradle
+[,groovy]
+----
+plugins {
+    id 'maven-publish'
+}
+
+publishing {
+    repositories {
+        maven {
+//            url = uri("${buildDir}/publishing-repository")
+//            url = layout.buildDirectory.dir('publishing-repository')
+//            url = uri('http://localhost:9081/repository/maven-snapshots/')
+//            url = 'http://localhost:9081/repository/maven-snapshots/'
+            url = nexusUrl
+            allowInsecureProtocol = true
+            credentials {
+                username nexusUsername
+                password nexusPassword
+            }
+        }
+    }
+}
+----
+
+=== Publish
+
+[,bash]
+----
+$ ./gradlew clean publish
+----
