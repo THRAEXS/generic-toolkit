@@ -4,6 +4,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
 import org.thraex.toolkit.entity.JpaEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -43,5 +44,7 @@ public interface GenericService <T extends JpaEntity<T>, R extends JpaRepository
      * @return the saved entity will never be {@literal null}.
      */
     T save(T entity, String... ignoredPaths);
+
+    <S extends T> List<S> saveAll(Iterable<S> entities);
 
 }
