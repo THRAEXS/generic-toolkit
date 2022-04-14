@@ -1,6 +1,5 @@
 package org.thraex.toolkit.webflux.handler;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -32,20 +31,20 @@ import java.util.Optional;
  * @author 鬼王
  * @date 2022/04/14 18:13
  */
-public abstract class GenericHandler<T extends JpaEntity<T>, S extends GenericService<T, ?>> {
+public abstract class GenericHandler<T extends JpaEntity<T>, S extends GenericService<T, ?>> implements HandlerModel {
 
-    protected static final String ID = "id";
-
-    @Autowired
-    protected S service;
+    protected final S service;
 
     private final Class<T> genericType;
 
-    protected GenericHandler() {
+    protected GenericHandler(S service) {
+        this.service = service;
+
         Class<T>[] classes = (Class<T>[]) GenericTypeResolver.resolveTypeArguments(getClass(), GenericHandler.class);
         genericType = classes[0];
     }
 
+    @Override
     public Mono<ServerResponse> one(ServerRequest request) {
         String id = request.pathVariable(ID);
         Optional<T> entity = service.repo().findById(id);
@@ -53,23 +52,31 @@ public abstract class GenericHandler<T extends JpaEntity<T>, S extends GenericSe
         return ServerResponse.ok().bodyValue(entity);
     }
 
+    @Override
     public Mono<ServerResponse> save(ServerRequest request) {
         return request.bodyToMono(genericType)
                 .map(service::save)
                 .flatMap(ServerResponse.ok()::bodyValue);
     }
 
+    @Override
     public Mono<ServerResponse> update(ServerRequest request) {
         return request.bodyToMono(genericType)
                 .map(service::save)
                 .flatMap(ServerResponse.ok()::bodyValue);
     }
 
+    @Override
     public Mono<ServerResponse> delete(ServerRequest request) {
         String id = request.pathVariable(ID);
         service.repo().deleteById(id);
 
         return ServerResponse.ok().bodyValue(true);
+    }
+
+    @Override
+    public String pattern() {
+        return genericType.getSimpleName().toLowerCase();
     }
 
 }

@@ -1,4 +1,4 @@
-package org.thraex.toolkit.annotation;
+package org.thraex.dmpp.generic.annotation;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -14,13 +14,12 @@ import java.lang.annotation.Target;
 
 /**
  * @author 鬼王
- * @date 2022/04/06 16:47
+ * @date 2022/04/14 21:49
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Import({ TemporalFormatConfig.class, RestExceptionHandler.class, AuditorAwareConfig.class })
 @Configuration
-@Deprecated
-public @interface EnableToolkit {
+public @interface EnableGeneric {
 }
