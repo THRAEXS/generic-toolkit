@@ -3,6 +3,7 @@ dependencies {
     api 'org.apache.commons:commons-lang3:3.12.0'
     api 'com.google.guava:guava:23.5-jre'
     api 'cn.hutool:hutool-all:5.8.0.M2'
-    api project(':lib-toolkit')
+
+    api project(String.format('%s:lib-toolkit', depth > 1 ? String.format(':%s', parent.name) : ''))
 }
 

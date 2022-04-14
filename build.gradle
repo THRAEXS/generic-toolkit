@@ -55,11 +55,10 @@ subprojects {
 
         repositories {
             maven {
-//            url = layout.buildDirectory.dir('publishing-repository')
-                url = nexusUrl
+                url = System.properties['nexus.url']
                 credentials {
-                    username nexusUsername
-                    password nexusPassword
+                    username = System.properties['nexus.username']
+                    password = System.properties['nexus.password']
                 }
             }
         }
