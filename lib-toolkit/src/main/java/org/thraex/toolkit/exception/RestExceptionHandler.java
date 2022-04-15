@@ -1,4 +1,4 @@
-package org.thraex.toolkit.configuration;
+package org.thraex.toolkit.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

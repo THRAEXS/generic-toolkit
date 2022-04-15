@@ -20,7 +20,7 @@ import java.util.HashMap;
  * @author 鬼王
  * @date 2021/08/30 16:10
  */
-public class TemporalFormatConfig {
+public class TemporalFormatConfiguration {
 
     private static final String FORMAT_DATE = "yyyy-MM-dd";
     private static final String FORMAT_TIME = "HH:mm:ss";
