@@ -12,6 +12,7 @@ buildNumber.properties
 # Gradle
 .gradle
 build
+bin
 
 # Cache of project
 .gradletasknamecache
