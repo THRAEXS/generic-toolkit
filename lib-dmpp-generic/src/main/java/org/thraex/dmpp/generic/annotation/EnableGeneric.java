@@ -2,10 +2,7 @@ package org.thraex.dmpp.generic.annotation;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.thraex.toolkit.configuration.AuditorAwareConfiguration;
-import org.thraex.toolkit.exception.RestExceptionHandler;
-import org.thraex.toolkit.configuration.TemporalFormatConfiguration;
-import org.thraex.toolkit.webflux.routing.GenericRoutingConfiguration;
+import org.thraex.dmpp.generic.GenericConfigurationImportSelector;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -20,12 +17,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import({
-        TemporalFormatConfiguration.class,
-        RestExceptionHandler.class,
-        AuditorAwareConfiguration.class,
-        GenericRoutingConfiguration.class
-})
+@Import(GenericConfigurationImportSelector.class)
 @Configuration
 public @interface EnableGeneric {
 }
