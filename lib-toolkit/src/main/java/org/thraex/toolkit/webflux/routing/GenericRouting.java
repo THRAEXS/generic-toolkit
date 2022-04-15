@@ -15,7 +15,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
  * @author 鬼王
  * @date 2022/04/14 21:57
  */
-public abstract class GenericRouting<T extends GenericHandler<?, ?>> {
+public class GenericRouting<T extends GenericHandler<?, ?>> {
 
     protected static final RequestPredicate ACCEPT_JSON = accept(MediaType.APPLICATION_JSON);
 
