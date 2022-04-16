@@ -20,5 +20,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Configuration(proxyBeanMethods = false)
+@Deprecated
 public @interface RoutingConfiguration {
 }
