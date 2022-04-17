@@ -1,5 +1,6 @@
 package org.thraex.toolkit.webflux.handler;
 
+import org.springframework.web.reactive.function.server.RequestPredicate;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -23,6 +24,6 @@ public interface GenericHandler {
 
     String pattern();
 
-    void router(RouterFunctions.Builder builder);
+    void routerFunction(String pattern, RequestPredicate predicate, RouterFunctions.Builder builder);
 
 }

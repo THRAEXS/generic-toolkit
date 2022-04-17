@@ -35,19 +35,21 @@ public class GenericRoutingConfiguration {
     @Bean
     @ConditionalOnMissingBean(name = "genericRouters")
     @ConditionalOnBean(GenericHandler.class)
-    RouterFunction<ServerResponse> genericRouters(ApplicationContext context) {
+    RouterFunction<ServerResponse> genericRouterFunction(ApplicationContext context) {
         Map<String, GenericHandler> beans = context.getBeansOfType(GenericHandler.class);
+        return beans.values().stream().map(this::assemble).reduce(RouterFunction::and).get();
+    }
+
+    private RouterFunction<ServerResponse> assemble(GenericHandler handler) {
+        String pattern = handler.pattern();
+        String varPattern = String.format(PATH_VARIABLE_PATTERN, pattern);
+
         RouterFunctions.Builder route = route();
-
-        beans.values().forEach(handler -> {
-            String pattern = handler.pattern();
-            String varPattern = String.format(PATH_VARIABLE_PATTERN, pattern);
-
-            route.POST(pattern, ACCEPT_JSON, handler::save)
-                    .PUT(pattern, ACCEPT_JSON, handler::update)
-                    .GET(varPattern, ACCEPT_JSON, handler::one)
-                    .DELETE(varPattern, ACCEPT_JSON, handler::delete);
-        });
+        route.POST(pattern, ACCEPT_JSON, handler::save)
+                .PUT(pattern, ACCEPT_JSON, handler::update)
+                .GET(varPattern, ACCEPT_JSON, handler::one)
+                .DELETE(varPattern, ACCEPT_JSON, handler::delete);
+        handler.routerFunction(pattern, ACCEPT_JSON, route);
 
         return route.build();
     }
