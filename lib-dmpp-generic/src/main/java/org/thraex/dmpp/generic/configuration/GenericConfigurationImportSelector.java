@@ -11,6 +11,8 @@ import org.thraex.toolkit.webflux.routing.GenericRoutingConfiguration;
 import java.util.stream.Stream;
 
 /**
+ * TODO: Opt: {@link GenericRoutingConfiguration} {@code @Configuration(proxyBeanMethods = false)}
+ *
  * @author 鬼王
  * @date 2022/04/15 22:01
  */

@@ -29,7 +29,7 @@ public class GenericRoutingConfiguration {
     public static final String PAGE_PATTERN = "%s/page";
 
     /**
-     * {@code @ConditionalOnMissingBean(name = "genericRouters")} can be omitted
+     * {@code @ConditionalOnMissingBean(name = "genericRouterFunction")} can be omitted
      *
      * @param context
      * @return
@@ -53,9 +53,9 @@ public class GenericRoutingConfiguration {
                     .GET(String.format(PAGE_PATTERN, pattern), ACCEPT_JSON, listHandler::page);
         }
 
-        route.POST(pattern, ACCEPT_JSON, handler::save)
+        route.GET(varPattern, ACCEPT_JSON, handler::one)
+                .POST(pattern, ACCEPT_JSON, handler::save)
                 .PUT(pattern, ACCEPT_JSON, handler::update)
-                .GET(varPattern, ACCEPT_JSON, handler::one)
                 .DELETE(varPattern, ACCEPT_JSON, handler::delete);
 
         handler.routerFunction(pattern, ACCEPT_JSON, route);
