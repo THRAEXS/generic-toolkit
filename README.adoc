@@ -6,6 +6,7 @@
 == TODOS
 
 - [ ] Optimization `GenericController`
+- [ ] Feature: Unified registration handler bean and service bean
 
 == Local Dev
 

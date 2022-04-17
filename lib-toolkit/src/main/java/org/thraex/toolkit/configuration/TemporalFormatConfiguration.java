@@ -27,7 +27,7 @@ public class TemporalFormatConfiguration {
     private static final String FORMAT_DATE_TIME = "yyyy-MM-dd HH:mm:ss";
 
     @Bean
-    public Jackson2ObjectMapperBuilderCustomizer builder() {
+    public Jackson2ObjectMapperBuilderCustomizer jacksonObjectMapperBuilderCustomizer() {
         DateTimeFormatter date = DateTimeFormatter.ofPattern(FORMAT_DATE);
         DateTimeFormatter time = DateTimeFormatter.ofPattern(FORMAT_TIME);
         DateTimeFormatter dateTime = DateTimeFormatter.ofPattern(FORMAT_DATE_TIME);
@@ -43,7 +43,7 @@ public class TemporalFormatConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(Jackson2ObjectMapperBuilderCustomizer.class)
-    public Jackson2ObjectMapperBuilderCustomizer builderV1() {
+    public Jackson2ObjectMapperBuilderCustomizer jacksonObjectMapperBuilderCustomizerV1() {
         final int capacity = 3;
         DateTimeFormatter date = DateTimeFormatter.ofPattern(FORMAT_DATE);
         DateTimeFormatter time = DateTimeFormatter.ofPattern(FORMAT_TIME);

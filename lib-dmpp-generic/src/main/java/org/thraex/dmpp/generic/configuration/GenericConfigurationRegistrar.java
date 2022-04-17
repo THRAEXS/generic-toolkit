@@ -1,9 +1,8 @@
-package org.thraex.dmpp.generic;
+package org.thraex.dmpp.generic.configuration;
 
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
 import org.thraex.dmpp.generic.doc.Documentation;
@@ -15,10 +14,11 @@ import org.thraex.toolkit.webflux.routing.GenericRoutingConfiguration;
 import java.util.List;
 
 /**
+ * Spare
+ *
  * @author 鬼王
  * @date 2022/04/15 22:16
  */
-@ComponentScan
 public class GenericConfigurationRegistrar implements ImportBeanDefinitionRegistrar {
 
     @Override
@@ -32,7 +32,8 @@ public class GenericConfigurationRegistrar implements ImportBeanDefinitionRegist
                 RestExceptionHandler.class).forEach(it -> {
             GenericBeanDefinition definition = new GenericBeanDefinition();
             definition.setBeanClass(it);
-            registry.registerBeanDefinition(importBeanNameGenerator.generateBeanName(definition, registry), definition);
+            String beanName = importBeanNameGenerator.generateBeanName(definition, registry);
+            registry.registerBeanDefinition(beanName, definition);
         });
     }
 }

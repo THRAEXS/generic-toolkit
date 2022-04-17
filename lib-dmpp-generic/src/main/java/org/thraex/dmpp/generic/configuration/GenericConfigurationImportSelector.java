@@ -1,4 +1,4 @@
-package org.thraex.dmpp.generic;
+package org.thraex.dmpp.generic.configuration;
 
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.type.AnnotationMetadata;

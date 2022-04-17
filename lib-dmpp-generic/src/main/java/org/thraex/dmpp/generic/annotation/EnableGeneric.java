@@ -2,9 +2,7 @@ package org.thraex.dmpp.generic.annotation;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.thraex.dmpp.generic.GenericConfigurationImportSelector;
-import org.thraex.dmpp.generic.GenericConfigurationRegistrar;
-import org.thraex.dmpp.generic.GenericHandlerRegistrar;
+import org.thraex.dmpp.generic.configuration.GenericConfigurationImportSelector;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -19,8 +17,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-//@Import({ GenericConfigurationImportSelector.class, GenericHandlerRegistrar.class })
-@Import({ GenericConfigurationRegistrar.class, GenericHandlerRegistrar.class })
+@Import(GenericConfigurationImportSelector.class)
 @Configuration
 public @interface EnableGeneric {
 }

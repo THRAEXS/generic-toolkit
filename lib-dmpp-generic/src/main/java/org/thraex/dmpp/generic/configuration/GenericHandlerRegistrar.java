@@ -1,13 +1,13 @@
-package org.thraex.dmpp.generic;
+package org.thraex.dmpp.generic.configuration;
 
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanNameGenerator;
-import org.springframework.beans.factory.support.ChildBeanDefinition;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
-import org.thraex.toolkit.webflux.handler.GenericHandler;
 
 /**
+ * TODO: Unified registration handler bean and service bean
+ *
  * @author 鬼王
  * @date 2022/04/16 21:57
  */
@@ -17,10 +17,6 @@ public class GenericHandlerRegistrar implements ImportBeanDefinitionRegistrar {
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
                                         BeanDefinitionRegistry registry,
                                         BeanNameGenerator importBeanNameGenerator) {
-//        ImportBeanDefinitionRegistrar.super.registerBeanDefinitions(importingClassMetadata, registry, importBeanNameGenerator);
-//        new ChildBeanDefinition();
-        ChildBeanDefinition childBeanDefinition = new ChildBeanDefinition(GenericHandler.class.getName());
-        System.out.println(1);
     }
 
 }
