@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.server.RequestPredicate;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.thraex.toolkit.webflux.handler.AbstractListHandler;
 import org.thraex.toolkit.webflux.handler.GenericHandler;
 
 import java.util.Map;
@@ -25,6 +26,7 @@ public class GenericRoutingConfiguration {
     public static final RequestPredicate ACCEPT_JSON = accept(MediaType.APPLICATION_JSON);
 
     public static final String PATH_VARIABLE_PATTERN = "%s/{id}";
+    public static final String PAGE_PATTERN = "%s/page";
 
     /**
      * {@code @ConditionalOnMissingBean(name = "genericRouters")} can be omitted
@@ -33,8 +35,8 @@ public class GenericRoutingConfiguration {
      * @return
      */
     @Bean
-    @ConditionalOnMissingBean(name = "genericRouters")
     @ConditionalOnBean(GenericHandler.class)
+    @ConditionalOnMissingBean(name = "genericRouterFunction")
     RouterFunction<ServerResponse> genericRouterFunction(ApplicationContext context) {
         Map<String, GenericHandler> beans = context.getBeansOfType(GenericHandler.class);
         return beans.values().stream().map(this::assemble).reduce(RouterFunction::and).get();
@@ -45,10 +47,17 @@ public class GenericRoutingConfiguration {
         String varPattern = String.format(PATH_VARIABLE_PATTERN, pattern);
 
         RouterFunctions.Builder route = route();
+        if (handler instanceof AbstractListHandler<?,?>) {
+            AbstractListHandler listHandler = (AbstractListHandler) handler;
+            route.GET(pattern, ACCEPT_JSON, listHandler::list)
+                    .GET(String.format(PAGE_PATTERN, pattern), ACCEPT_JSON, listHandler::page);
+        }
+
         route.POST(pattern, ACCEPT_JSON, handler::save)
                 .PUT(pattern, ACCEPT_JSON, handler::update)
                 .GET(varPattern, ACCEPT_JSON, handler::one)
                 .DELETE(varPattern, ACCEPT_JSON, handler::delete);
+
         handler.routerFunction(pattern, ACCEPT_JSON, route);
 
         return route.build();
