@@ -18,6 +18,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Import(GenericConfigurationImportSelector.class)
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public @interface EnableGeneric {
 }

@@ -5,14 +5,13 @@ import org.springframework.core.type.AnnotationMetadata;
 import org.thraex.dmpp.generic.doc.Documentation;
 import org.thraex.toolkit.configuration.AuditorAwareConfiguration;
 import org.thraex.toolkit.configuration.TemporalFormatConfiguration;
+import org.thraex.toolkit.configuration.WrapperCodecsConfiguration;
 import org.thraex.toolkit.exception.RestExceptionHandler;
 import org.thraex.toolkit.webflux.routing.GenericRoutingConfiguration;
 
 import java.util.stream.Stream;
 
 /**
- * TODO: Opt: {@link GenericRoutingConfiguration} {@code @Configuration(proxyBeanMethods = false)}
- *
  * @author 鬼王
  * @date 2022/04/15 22:01
  */
@@ -24,6 +23,7 @@ public class GenericConfigurationImportSelector implements ImportSelector {
                 AuditorAwareConfiguration.class,
                 GenericRoutingConfiguration.class,
                 Documentation.class,
+                WrapperCodecsConfiguration.class,
                 RestExceptionHandler.class).map(Class::getName).toArray(String[]::new);
     }
 
