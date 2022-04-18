@@ -1,4 +1,4 @@
-package org.thraex.toolkit.webflux.routing;
+package org.thraex.toolkit.configuration;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

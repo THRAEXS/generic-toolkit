@@ -7,10 +7,10 @@ import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
 import org.thraex.dmpp.generic.doc.Documentation;
 import org.thraex.toolkit.configuration.AuditorAwareConfiguration;
+import org.thraex.toolkit.configuration.GenericRoutingConfiguration;
 import org.thraex.toolkit.configuration.TemporalFormatConfiguration;
 import org.thraex.toolkit.configuration.WrapperCodecsConfiguration;
 import org.thraex.toolkit.exception.RestExceptionHandler;
-import org.thraex.toolkit.webflux.routing.GenericRoutingConfiguration;
 
 import java.util.List;
 
@@ -26,16 +26,21 @@ public class GenericConfigurationRegistrar implements ImportBeanDefinitionRegist
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
                                         BeanDefinitionRegistry registry,
                                         BeanNameGenerator importBeanNameGenerator) {
-        List.of(TemporalFormatConfiguration.class,
-                AuditorAwareConfiguration.class,
-                GenericRoutingConfiguration.class,
-                Documentation.class,
-                WrapperCodecsConfiguration.class,
-                RestExceptionHandler.class).forEach(it -> {
+        list().forEach(it -> {
             GenericBeanDefinition definition = new GenericBeanDefinition();
             definition.setBeanClass(it);
             String beanName = importBeanNameGenerator.generateBeanName(definition, registry);
             registry.registerBeanDefinition(beanName, definition);
         });
     }
+
+    public static List<Class<?>> list() {
+        return List.of(TemporalFormatConfiguration.class,
+                AuditorAwareConfiguration.class,
+                GenericRoutingConfiguration.class,
+                WrapperCodecsConfiguration.class,
+                RestExceptionHandler.class,
+                Documentation.class);
+    }
+
 }
