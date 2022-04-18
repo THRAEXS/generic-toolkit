@@ -1,5 +1,7 @@
 package org.thraex.toolkit.configuration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.reactivestreams.Publisher;
 import org.springframework.boot.web.codec.CodecCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -11,9 +13,10 @@ import org.springframework.http.ReactiveHttpOutputMessage;
 import org.springframework.http.codec.HttpMessageWriter;
 import org.thraex.toolkit.response.ResponseResult;
 import reactor.core.publisher.Mono;
+import reactor.util.Logger;
+import reactor.util.Loggers;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
@@ -26,12 +29,13 @@ import java.util.Map;
 public class WrapperCodecsConfiguration {
 
     @Bean
-    CodecCustomizer wrapperCodecCustomizer() {
-        return configurer -> configurer.customCodecs().registerWithDefaultConfig(new WrapperHttpMessageWriter());
+    CodecCustomizer wrapperCodecCustomizer(ObjectMapper objectMapper) {
+        return configurer -> configurer.customCodecs().registerWithDefaultConfig(new WrapperHttpMessageWriter(objectMapper));
     }
 
+    record WrapperHttpMessageWriter(ObjectMapper objectMapper) implements HttpMessageWriter {
 
-    static class WrapperHttpMessageWriter implements HttpMessageWriter {
+        private static Logger logger = Loggers.getLogger(WrapperHttpMessageWriter.class);
 
         private static final List<MediaType> MEDIA_TYPES = Collections.singletonList(MediaType.APPLICATION_JSON);
 
@@ -48,12 +52,10 @@ public class WrapperCodecsConfiguration {
         @Override
         public Mono<Void> write(Publisher inputStream, ResolvableType elementType,
                                 MediaType mediaType, ReactiveHttpOutputMessage message, Map hints) {
-            Charset charset = StandardCharsets.UTF_8;
+            return Mono.from(inputStream).flatMap(transformer -> {
+                final Object data = transformer instanceof ResponseResult ? transformer : ResponseResult.ok(transformer);
 
-            return Mono.from(inputStream).flatMap(data -> {
-                final Object result = data instanceof ResponseResult ? data : ResponseResult.ok(data);
-
-                final ByteBuffer byteBuffer = charset.encode(result.toString());
+                final ByteBuffer byteBuffer = StandardCharsets.UTF_8.encode(mapper(data));
                 final DataBuffer buffer = message.bufferFactory().wrap(byteBuffer);
 
                 final HttpHeaders headers = message.getHeaders();
@@ -63,6 +65,20 @@ public class WrapperCodecsConfiguration {
                 return message.writeWith(Mono.just(buffer));
             });
         }
+
+        private String mapper(Object value) {
+            String result;
+            try {
+                result = objectMapper.writeValueAsString(value);
+            } catch (JsonProcessingException e) {
+                final String error = e.getMessage();
+                logger.error(error);
+                result = error;
+            }
+
+            return result;
+        }
+
     }
 
 }
