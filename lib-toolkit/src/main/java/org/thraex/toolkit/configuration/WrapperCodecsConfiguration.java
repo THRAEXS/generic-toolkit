@@ -35,7 +35,7 @@ public class WrapperCodecsConfiguration {
 
     record WrapperHttpMessageWriter(ObjectMapper objectMapper) implements HttpMessageWriter {
 
-        private static Logger logger = Loggers.getLogger(WrapperHttpMessageWriter.class);
+        private static final Logger logger = Loggers.getLogger(WrapperHttpMessageWriter.class);
 
         private static final List<MediaType> MEDIA_TYPES = Collections.singletonList(MediaType.APPLICATION_JSON);
 

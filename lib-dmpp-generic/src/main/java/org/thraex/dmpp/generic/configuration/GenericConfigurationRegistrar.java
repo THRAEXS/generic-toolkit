@@ -7,10 +7,10 @@ import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
 import org.thraex.dmpp.generic.doc.Documentation;
 import org.thraex.toolkit.configuration.AuditorAwareConfiguration;
-import org.thraex.toolkit.configuration.GenericRoutingConfiguration;
+import org.thraex.toolkit.configuration.HandlerRoutingConfiguration;
 import org.thraex.toolkit.configuration.TemporalFormatConfiguration;
 import org.thraex.toolkit.configuration.WrapperCodecsConfiguration;
-import org.thraex.toolkit.exception.RestExceptionHandler;
+import org.thraex.toolkit.exception.HandlerFunctionExceptionHandler;
 
 import java.util.List;
 
@@ -37,9 +37,9 @@ public class GenericConfigurationRegistrar implements ImportBeanDefinitionRegist
     public static List<Class<?>> list() {
         return List.of(TemporalFormatConfiguration.class,
                 AuditorAwareConfiguration.class,
-                GenericRoutingConfiguration.class,
+                HandlerRoutingConfiguration.class,
                 WrapperCodecsConfiguration.class,
-                RestExceptionHandler.class,
+                HandlerFunctionExceptionHandler.class,
                 Documentation.class);
     }
 

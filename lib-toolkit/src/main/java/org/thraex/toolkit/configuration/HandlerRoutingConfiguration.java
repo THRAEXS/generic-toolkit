@@ -21,7 +21,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
  * @author 鬼王
  * @date 2022/04/14 21:57
  */
-public class GenericRoutingConfiguration {
+public class HandlerRoutingConfiguration {
 
     public static final RequestPredicate ACCEPT_JSON = accept(MediaType.APPLICATION_JSON);
 

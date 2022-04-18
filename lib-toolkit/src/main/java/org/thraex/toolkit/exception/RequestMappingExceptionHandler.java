@@ -1,23 +1,25 @@
 package org.thraex.toolkit.exception;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.thraex.toolkit.response.ResponseResult;
 import org.thraex.toolkit.response.ResponseStatus;
+import reactor.util.Logger;
+import reactor.util.Loggers;
 
 /**
- * TODO: Opt Exception
+ * TODO: Optimization global Exception
+ * <br>
+ * Priority is higher than {@link HandlerFunctionExceptionHandler}
  *
  * @author 鬼王
  * @date 2022/03/10 11:13
  */
 @RestControllerAdvice
-public class RestExceptionHandler {
+public class RequestMappingExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(RestExceptionHandler.class);
+    private static final Logger logger = Loggers.getLogger(HandlerFunctionExceptionHandler.class);
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     ResponseResult handler(EmptyResultDataAccessException e) {
@@ -33,7 +35,7 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     ResponseResult handler(Exception e) {
-        logger.error("Handling exception", e);
+        logger.warn("Handling exception: {}", e.getMessage());
         return ResponseResult.fail(e.getMessage());
     }
 

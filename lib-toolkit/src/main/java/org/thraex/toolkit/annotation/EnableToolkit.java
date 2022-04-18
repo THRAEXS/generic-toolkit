@@ -3,7 +3,7 @@ package org.thraex.toolkit.annotation;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.thraex.toolkit.configuration.AuditorAwareConfiguration;
-import org.thraex.toolkit.exception.RestExceptionHandler;
+import org.thraex.toolkit.exception.RequestMappingExceptionHandler;
 import org.thraex.toolkit.configuration.TemporalFormatConfiguration;
 
 import java.lang.annotation.Documented;
@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import({ TemporalFormatConfiguration.class, RestExceptionHandler.class, AuditorAwareConfiguration.class })
+@Import({ TemporalFormatConfiguration.class, RequestMappingExceptionHandler.class, AuditorAwareConfiguration.class })
 @Configuration
 @Deprecated
 public @interface EnableToolkit {
