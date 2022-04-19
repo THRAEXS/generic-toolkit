@@ -31,7 +31,7 @@ import java.util.function.Function;
  */
 public class HandlerFunctionExceptionHandler implements WebExceptionHandler, Ordered {
 
-    private static final Logger logger = Loggers.getLogger(HandlerFunctionExceptionHandler.class);
+    private final Logger logger = Loggers.getLogger(getClass());
 
     private static final Function<Throwable, Object> DEFAULT_EXCEPTION = e -> ResponseResult.fail(e.getMessage());
 

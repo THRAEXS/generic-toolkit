@@ -1,15 +1,17 @@
 package org.thraex.toolkit.webflux.handler;
 
 import org.springframework.core.GenericTypeResolver;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.util.Assert;
 import org.springframework.web.reactive.function.server.RequestPredicate;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.server.ResponseStatusException;
 import org.thraex.toolkit.entity.JpaEntity;
 import org.thraex.toolkit.mvc.service.GenericService;
 import reactor.core.publisher.Mono;
-
-import java.util.Optional;
 
 /**
  * Generic type T to Type / Class
@@ -49,7 +51,8 @@ public abstract class AbstractHandler<T extends JpaEntity<T>, S extends GenericS
     @Override
     public Mono<ServerResponse> one(ServerRequest request) {
         String id = request.pathVariable(ID);
-        Optional<T> entity = service.repo().findById(id);
+        T entity = service.repo().findById(id).orElseThrow(() ->
+                new EmptyResultDataAccessException(String.format("No entity with id %s exists!", id), 1));
 
         return ServerResponse.ok().bodyValue(entity);
     }
@@ -57,6 +60,7 @@ public abstract class AbstractHandler<T extends JpaEntity<T>, S extends GenericS
     @Override
     public Mono<ServerResponse> save(ServerRequest request) {
         return request.bodyToMono(genericType)
+                .doOnSuccess(this::notNull)
                 .map(service::save)
                 .flatMap(ServerResponse.ok()::bodyValue);
     }
@@ -64,8 +68,16 @@ public abstract class AbstractHandler<T extends JpaEntity<T>, S extends GenericS
     @Override
     public Mono<ServerResponse> update(ServerRequest request) {
         return request.bodyToMono(genericType)
+                .doOnNext(it -> Assert.notNull(it.getId(), "The given entity id must not be null!"))
+                .doOnSuccess(this::notNull)
                 .map(service::save)
                 .flatMap(ServerResponse.ok()::bodyValue);
+    }
+
+    private void notNull(Object value) {
+        if (value == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Override

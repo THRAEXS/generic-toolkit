@@ -19,7 +19,7 @@ import reactor.util.Loggers;
 @RestControllerAdvice
 public class RequestMappingExceptionHandler {
 
-    private static final Logger logger = Loggers.getLogger(HandlerFunctionExceptionHandler.class);
+    private final Logger logger = Loggers.getLogger(getClass());
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     ResponseResult handler(EmptyResultDataAccessException e) {
