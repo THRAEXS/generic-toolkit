@@ -1,12 +1,15 @@
 package org.thraex.toolkit.exception;
 
-import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
+import org.springframework.core.Ordered;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.codec.HttpMessageWriter;
 import org.springframework.http.codec.ServerCodecConfigurer;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.reactive.result.view.ViewResolver;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebExceptionHandler;
+import org.springframework.web.server.handler.ExceptionHandlingWebHandler;
 import org.thraex.toolkit.response.ResponseResult;
 import org.thraex.toolkit.response.ResponseStatus;
 import reactor.core.publisher.Mono;
@@ -20,11 +23,13 @@ import java.util.function.Function;
 
 /**
  * TODO: Optimization global Exception
+ * <br>
+ * {@link ExceptionHandlingWebHandler}
  *
  * @author 鬼王
  * @date 2022/04/18 17:37
  */
-public class HandlerFunctionExceptionHandler implements ErrorWebExceptionHandler {
+public class HandlerFunctionExceptionHandler implements WebExceptionHandler, Ordered {
 
     private static final Logger logger = Loggers.getLogger(HandlerFunctionExceptionHandler.class);
 
@@ -43,12 +48,21 @@ public class HandlerFunctionExceptionHandler implements ErrorWebExceptionHandler
 
     @Override
     public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
+        if (ErrorResponse.class.isAssignableFrom(ex.getClass())) {
+            return Mono.error(ex);
+        }
+
         final Class<? extends Throwable> exception = ex.getClass();
         logger.warn("{}: [{}]", exception.getSimpleName(), ex.getMessage());
 
         return ServerResponse.ok()
                 .bodyValue(EXCEPTION_TYPES.getOrDefault(exception, DEFAULT_EXCEPTION).apply(ex))
                 .flatMap(response -> response.writeTo(exchange, new Context()));
+    }
+
+    @Override
+    public int getOrder() {
+        return -2;
     }
 
     private class Context implements ServerResponse.Context {
