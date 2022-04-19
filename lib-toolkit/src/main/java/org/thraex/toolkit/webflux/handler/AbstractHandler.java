@@ -14,6 +14,10 @@ import org.thraex.toolkit.mvc.service.GenericService;
 import reactor.core.publisher.Mono;
 
 /**
+ * TODO: saveAll
+ *
+ * <br>
+ *
  * Generic type T to Type / Class
  *
  * <pre>
@@ -74,7 +78,7 @@ public abstract class AbstractHandler<T extends JpaEntity<T>, S extends GenericS
                 .flatMap(ServerResponse.ok()::bodyValue);
     }
 
-    private void notNull(Object value) {
+    protected void notNull(Object value) {
         if (value == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -90,7 +94,11 @@ public abstract class AbstractHandler<T extends JpaEntity<T>, S extends GenericS
 
     @Override
     public String pattern() {
-        return genericType.getSimpleName().toLowerCase();
+        final String simpleName = genericType.getSimpleName();
+        String regex = "([a-z])([A-Z]+)";
+        String replacement = "$1/$2";
+
+        return simpleName.replaceAll(regex, replacement).toLowerCase();
     }
 
     @Override
