@@ -78,12 +78,6 @@ public abstract class AbstractHandler<T extends JpaEntity<T>, S extends GenericS
                 .flatMap(ServerResponse.ok()::bodyValue);
     }
 
-    protected void notNull(Object value) {
-        if (value == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @Override
     public Mono<ServerResponse> delete(ServerRequest request) {
         String id = request.pathVariable(ID);
@@ -103,5 +97,11 @@ public abstract class AbstractHandler<T extends JpaEntity<T>, S extends GenericS
 
     @Override
     public void routerFunction(String pattern, RequestPredicate predicate, RouterFunctions.Builder builder) {}
+
+    protected void notNull(Object value) {
+        if (value == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }

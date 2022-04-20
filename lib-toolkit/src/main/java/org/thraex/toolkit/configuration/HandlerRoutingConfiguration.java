@@ -47,7 +47,10 @@ public class HandlerRoutingConfiguration {
         String varPattern = String.format(PATH_VARIABLE_PATTERN, pattern);
 
         RouterFunctions.Builder route = route();
-        if (handler instanceof AbstractListHandler<?,?>) {
+
+        handler.routerFunction(pattern, ACCEPT_JSON, route);
+
+        if (AbstractListHandler.class.isAssignableFrom(handler.getClass())) {
             AbstractListHandler listHandler = (AbstractListHandler) handler;
             route.GET(pattern, ACCEPT_JSON, listHandler::list)
                     .GET(String.format(PAGE_PATTERN, pattern), ACCEPT_JSON, listHandler::page);
@@ -57,8 +60,6 @@ public class HandlerRoutingConfiguration {
                 .POST(pattern, ACCEPT_JSON, handler::save)
                 .PUT(pattern, ACCEPT_JSON, handler::update)
                 .DELETE(varPattern, ACCEPT_JSON, handler::delete);
-
-        handler.routerFunction(pattern, ACCEPT_JSON, route);
 
         return route.build();
     }
