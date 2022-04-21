@@ -1,6 +1,6 @@
 package org.thraex.toolkit.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.OneToOne;
@@ -31,7 +31,7 @@ public abstract class AbstractTree<T extends AbstractTree<T>>
      * TODO: Ignore parent ???
      */
     @OneToOne
-    @JsonIgnoreProperties({ "parent", "children" })
+    @JsonIncludeProperties({ "id", "name", "code" })
     private T parent;
 
     private boolean enabled;
