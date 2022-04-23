@@ -6,6 +6,7 @@ import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
 import org.thraex.dmpp.generic.doc.Documentation;
+import org.thraex.dmpp.generic.security.SecurityConfiguration;
 import org.thraex.toolkit.configuration.AuditorAwareConfiguration;
 import org.thraex.toolkit.configuration.HandlerRoutingConfiguration;
 import org.thraex.toolkit.configuration.TemporalFormatConfiguration;
@@ -40,7 +41,8 @@ public class GenericConfigurationRegistrar implements ImportBeanDefinitionRegist
                 HandlerRoutingConfiguration.class,
                 WrapperCodecsConfiguration.class,
                 HandlerFunctionExceptionHandler.class,
-                Documentation.class);
+                Documentation.class,
+                SecurityConfiguration.class);
     }
 
 }
