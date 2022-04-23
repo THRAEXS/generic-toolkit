@@ -3,6 +3,7 @@ package org.thraex.dmpp.generic.annotation;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.thraex.dmpp.generic.configuration.GenericConfigurationImportSelector;
+import org.thraex.toolkit.configuration.HandlerRoutingConfiguration;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -20,4 +21,10 @@ import java.lang.annotation.Target;
 @Import(GenericConfigurationImportSelector.class)
 @Configuration(proxyBeanMethods = false)
 public @interface EnableGeneric {
+
+    /**
+     * Whether to enable {@code genericRouterFunction}. See {@link HandlerRoutingConfiguration}
+     */
+    boolean genericRouterFunction() default true;
+
 }
