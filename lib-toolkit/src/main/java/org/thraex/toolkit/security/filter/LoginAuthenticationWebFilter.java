@@ -84,7 +84,7 @@ public class LoginAuthenticationWebFilter implements WebFilter {
 
         return securityContextRepository.save(exchange.getExchange(), securityContext)
                 .then(authenticationSuccessHandler.onAuthenticationSuccess(exchange, authentication))
-                .subscriberContext(ReactiveSecurityContextHolder.withSecurityContext(Mono.just(securityContext)));
+                .contextWrite(ReactiveSecurityContextHolder.withSecurityContext(Mono.just(securityContext)));
     }
 
 }

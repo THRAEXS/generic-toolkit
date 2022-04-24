@@ -7,6 +7,7 @@ import org.thraex.toolkit.response.ResponseStatus;
  * @author 鬼王
  * @date 2022/03/30 18:40
  */
+@Deprecated
 public class TokenAuthenticationException extends AuthenticationException {
 
     private ResponseStatus status;
