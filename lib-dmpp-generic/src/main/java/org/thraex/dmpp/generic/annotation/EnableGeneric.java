@@ -2,7 +2,6 @@ package org.thraex.dmpp.generic.annotation;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.thraex.dmpp.generic.configuration.GenericConfigurationImportSelector;
 import org.thraex.toolkit.configuration.HandlerRoutingConfiguration;
 
@@ -19,7 +18,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@EnableWebFluxSecurity
 @Import(GenericConfigurationImportSelector.class)
 @Configuration(proxyBeanMethods = false)
 public @interface EnableGeneric {

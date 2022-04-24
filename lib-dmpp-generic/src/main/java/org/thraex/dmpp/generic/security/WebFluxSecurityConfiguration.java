@@ -1,5 +1,7 @@
 package org.thraex.dmpp.generic.security;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -9,13 +11,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.server.ServerWebExchange;
 import org.thraex.toolkit.response.ResponseResult;
 import org.thraex.toolkit.response.ResponseStatus;
+import org.thraex.toolkit.security.filter.LoginAuthenticationWebFilter;
+import org.thraex.toolkit.security.filter.TokenAuthenticationWebFilter;
 import org.thraex.toolkit.security.token.TokenProcessor;
 import org.thraex.toolkit.security.token.TokenProperties;
 import org.thraex.toolkit.security.writer.ServerHttpResponseWriter;
@@ -25,17 +32,26 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
+ * {@link ReactiveUserDetailsServiceAutoConfiguration}
+ *
  * @author 鬼王
  * @date 2022/03/18 16:47
  */
-@Import(TokenProperties.class)
+@ConditionalOnBean(ReactiveUserDetailsService.class)
 @ConfigurationProperties("thraex.security")
+@Import(TokenProcessor.class)
 @EnableConfigurationProperties(TokenProperties.class)
-public class SecurityConfiguration {
+@EnableWebFluxSecurity
+public class WebFluxSecurityConfiguration {
 
     private Set<String> permitted = Collections.EMPTY_SET;
 
     private String prefix;
+
+    @Bean
+    ReactiveAuthenticationManager authenticationManager(ReactiveUserDetailsService service) {
+        return new UserDetailsRepositoryReactiveAuthenticationManager(service);
+    }
 
     @Bean
     SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http,
