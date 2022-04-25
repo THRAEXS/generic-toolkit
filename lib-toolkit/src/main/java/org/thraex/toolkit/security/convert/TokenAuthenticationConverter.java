@@ -7,16 +7,18 @@ import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 import org.springframework.web.server.ServerWebExchange;
 import org.thraex.toolkit.security.token.TokenProcessor;
+import org.thraex.toolkit.security.user.TransitionalUser;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.SignalType;
 import reactor.util.Logger;
 import reactor.util.Loggers;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -54,11 +56,11 @@ public class TokenAuthenticationConverter implements ServerAuthenticationConvert
             JwtClaims claims = tokenProcessor.verify(authorization);
             logger.debug(claims.toString());
 
-            String principal = claims.getClaimValueAsString("principal");
             ObjectMapper mapper = new ObjectMapper();
-            User user = mapper.readValue(principal, User.class);
+            String principalString = claims.getClaimValueAsString("principal");
+            UserDetails principal = TransitionalUser.withMap(mapper.readValue(principalString, Map.class)).build();
 
-            return Mono.just(new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities()));
+            return Mono.just(new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), principal.getAuthorities()));
         } catch (InvalidJwtException | IOException e) {
             logger.error(e.getMessage());
         }
