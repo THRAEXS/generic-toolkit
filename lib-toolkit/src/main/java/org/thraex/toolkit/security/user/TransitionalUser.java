@@ -114,7 +114,6 @@ public class TransitionalUser implements UserDetails {
     }
 
     public static UserBuilder withMap(Map<String, Object> principal) {
-        String id = principal.get("id").toString();
         return withId(principal.get("id").toString())
                 .username(principal.get("username").toString())
                 .password(principal.get("password").toString())
