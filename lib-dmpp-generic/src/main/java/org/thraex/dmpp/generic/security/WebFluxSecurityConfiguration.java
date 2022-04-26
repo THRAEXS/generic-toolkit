@@ -54,8 +54,7 @@ public class WebFluxSecurityConfiguration {
 
         http.csrf().disable().headers().frameOptions().disable();
 
-        http.authenticationManager(manager)
-                .addFilterAt(LoginAuthenticationWebFilter.of(manager, tokenProcessor), SecurityWebFiltersOrder.HTTP_BASIC)
+        http.addFilterAt(LoginAuthenticationWebFilter.of(manager, tokenProcessor), SecurityWebFiltersOrder.HTTP_BASIC)
                 .addFilterAt(TokenAuthenticationWebFilter.of(tokenProcessor), SecurityWebFiltersOrder.AUTHENTICATION)
                 .exceptionHandling()
                 .authenticationEntryPoint(ResponseStatusExceptionHandler::unauthorized)
