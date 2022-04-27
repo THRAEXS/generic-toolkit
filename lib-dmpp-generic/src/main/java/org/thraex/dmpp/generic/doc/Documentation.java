@@ -25,9 +25,8 @@ public class Documentation {
     @Bean
     @ConditionalOnResource(resources = RESOURCES)
     RouterFunction<ServerResponse> docs(@Value(RESOURCES) Resource index){
-        return route(GET("/"), request ->
-                ok().contentType(MediaType.TEXT_HTML).bodyValue(index))
-                .and(RouterFunctions.resources("/**", new ClassPathResource("static/docs/")));
+        return route(GET("/docs"), request -> ok().contentType(MediaType.TEXT_HTML).bodyValue(index))
+                .and(RouterFunctions.resources("/docs/**", new ClassPathResource("static/docs/")));
     }
 
 }
