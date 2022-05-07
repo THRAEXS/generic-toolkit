@@ -12,6 +12,9 @@ import org.springframework.util.Assert;
 import org.thraex.toolkit.entity.JpaEntity;
 import org.thraex.toolkit.mvc.service.GenericService;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -58,6 +61,12 @@ public abstract class GenericServiceImpl<T extends JpaEntity<T>, R extends JpaRe
         T edit = StringUtils.isBlank(id) ? entity : from.get();
 
         return repository.save(edit);
+    }
+
+    @Override
+    public List<T> saveAll(Collection<T> entities, String... ignoredPaths) {
+        Assert.notNull(entities, "The given entities must not be null!");
+        return entities.stream().filter(Objects::nonNull).map(it -> save(it, ignoredPaths)).toList();
     }
 
 }

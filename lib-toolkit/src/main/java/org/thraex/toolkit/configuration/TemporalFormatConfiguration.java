@@ -20,14 +20,14 @@ import java.util.HashMap;
  * @author 鬼王
  * @date 2021/08/30 16:10
  */
-public class TemporalFormatConfig {
+public class TemporalFormatConfiguration {
 
     private static final String FORMAT_DATE = "yyyy-MM-dd";
     private static final String FORMAT_TIME = "HH:mm:ss";
     private static final String FORMAT_DATE_TIME = "yyyy-MM-dd HH:mm:ss";
 
     @Bean
-    public Jackson2ObjectMapperBuilderCustomizer builder() {
+    public Jackson2ObjectMapperBuilderCustomizer jacksonObjectMapperBuilderCustomizer() {
         DateTimeFormatter date = DateTimeFormatter.ofPattern(FORMAT_DATE);
         DateTimeFormatter time = DateTimeFormatter.ofPattern(FORMAT_TIME);
         DateTimeFormatter dateTime = DateTimeFormatter.ofPattern(FORMAT_DATE_TIME);
@@ -43,7 +43,7 @@ public class TemporalFormatConfig {
 
     @Bean
     @ConditionalOnMissingBean(Jackson2ObjectMapperBuilderCustomizer.class)
-    public Jackson2ObjectMapperBuilderCustomizer builderV1() {
+    public Jackson2ObjectMapperBuilderCustomizer jacksonObjectMapperBuilderCustomizerV1() {
         final int capacity = 3;
         DateTimeFormatter date = DateTimeFormatter.ofPattern(FORMAT_DATE);
         DateTimeFormatter time = DateTimeFormatter.ofPattern(FORMAT_TIME);

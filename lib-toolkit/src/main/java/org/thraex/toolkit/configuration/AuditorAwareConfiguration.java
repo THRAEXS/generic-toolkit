@@ -10,7 +10,7 @@ import java.util.Optional;
  * @date 2021/08/30 14:27
  */
 @EnableJpaAuditing(modifyOnCreate = false)
-public class AuditorAwareConfig implements AuditorAware<String> {
+public class AuditorAwareConfiguration implements AuditorAware<String> {
 
     @Override
     public Optional<String> getCurrentAuditor() {

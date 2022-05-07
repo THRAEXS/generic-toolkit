@@ -4,6 +4,8 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
 import org.thraex.toolkit.entity.JpaEntity;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -36,12 +38,23 @@ public interface GenericService <T extends JpaEntity<T>, R extends JpaRepository
     Optional<T> findOneByAny(T probe, String... ignoredPaths);
 
     /**
+     * TODO: {@code S extends T}
+     * <br>
+     *
      * Saves a given entity.
-     * {@code <S extends T>}
      *
      * @param entity must not be {@literal null}.
      * @return the saved entity will never be {@literal null}.
      */
     T save(T entity, String... ignoredPaths);
+
+    /**
+     * TODO: {@code S extends T} / batch
+     *
+     * @param entities
+     * @param ignoredPaths
+     * @return
+     */
+    List<T> saveAll(Collection<T> entities, String... ignoredPaths);
 
 }

@@ -3,6 +3,12 @@
 
 = {toc-title}
 
+== TODOS
+
+- [ ] Optimization `GenericController`
+- [ ] Feature: Unified registration handler bean and service bean
+- [ ] Feature: Dynamic proxy registration handler
+
 == Local Dev
 
 === Configuration
