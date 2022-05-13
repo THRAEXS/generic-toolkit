@@ -18,15 +18,19 @@ import reactor.core.publisher.Mono;
  */
 public abstract class ServerHttpResponseWriter {
 
-    public static Mono<Void> ok(WebFilterExchange exchange, ResponseResult<String> data) {
-        return write(exchange.getExchange(), HttpStatus.OK, data);
+    public static Mono<Void> ok(WebFilterExchange exchange, ResponseResult<Object> data) {
+        return ok(exchange.getExchange(), data);
     }
 
-    public static Mono<Void> write(ServerWebExchange exchange, HttpStatus status, ResponseResult<String> data) {
+    public static Mono<Void> ok(ServerWebExchange exchange, ResponseResult<Object> data) {
+        return write(exchange, HttpStatus.OK, data);
+    }
+
+    public static Mono<Void> write(ServerWebExchange exchange, HttpStatus status, ResponseResult<Object> data) {
         return write(exchange.getResponse(), status, data);
     }
 
-    public static Mono<Void> write(ServerHttpResponse response, HttpStatus status, ResponseResult<String> data) {
+    public static Mono<Void> write(ServerHttpResponse response, HttpStatus status, ResponseResult<Object> data) {
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         response.setStatusCode(status);
 

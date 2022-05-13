@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.thraex.toolkit.security.filter.LoginAuthenticationWebFilter;
 import org.thraex.toolkit.security.filter.TokenAuthenticationWebFilter;
+import org.thraex.toolkit.security.filter.VerificationCodeWebFilter;
 import org.thraex.toolkit.security.handler.ResponseStatusExceptionHandler;
 import org.thraex.toolkit.security.token.TokenProcessor;
 import org.thraex.toolkit.security.token.TokenProperties;
@@ -52,7 +53,8 @@ public class WebFluxSecurityConfiguration {
 
         http.csrf().disable().headers().frameOptions().disable();
 
-        http.addFilterAt(LoginAuthenticationWebFilter.of(manager, tokenProcessor), SecurityWebFiltersOrder.HTTP_BASIC)
+        http.addFilterBefore(new VerificationCodeWebFilter(), SecurityWebFiltersOrder.HTTP_BASIC)
+                .addFilterAt(LoginAuthenticationWebFilter.of(manager, tokenProcessor), SecurityWebFiltersOrder.HTTP_BASIC)
                 .addFilterAt(TokenAuthenticationWebFilter.of(tokenProcessor), SecurityWebFiltersOrder.AUTHENTICATION)
                 .exceptionHandling()
                 .authenticationEntryPoint(ResponseStatusExceptionHandler::unauthorized)
