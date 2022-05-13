@@ -28,6 +28,7 @@ public class TokenAuthenticationWebFilter implements WebFilter {
 
     private ServerAuthenticationConverter authenticationConverter;
 
+    // TODO: Remove
     private final String prefix;
 
     public TokenAuthenticationWebFilter(TokenProcessor tokenProcessor) {
