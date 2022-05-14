@@ -23,7 +23,7 @@ import org.thraex.toolkit.security.token.TokenProcessor;
 import org.thraex.toolkit.security.token.TokenProperties;
 
 import java.util.Collections;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -61,11 +61,12 @@ public class WebFluxSecurityConfiguration {
 
         http.csrf().disable().headers().frameOptions().disable();
 
-        if (Objects.nonNull(verificationCodeHandler)) {
-            http.addFilterBefore(new VerificationCodeWebFilter(verificationCodeHandler), SecurityWebFiltersOrder.HTTP_BASIC);
-        }
+        SecurityWebFiltersOrder httpBasic = SecurityWebFiltersOrder.HTTP_BASIC;
 
-        http.addFilterAt(LoginAuthenticationWebFilter.of(manager, tokenProcessor), SecurityWebFiltersOrder.HTTP_BASIC)
+        Optional.ofNullable(verificationCodeHandler).ifPresent(it ->
+                http.addFilterBefore(new VerificationCodeWebFilter(verificationCodeHandler), httpBasic));
+
+        http.addFilterAt(LoginAuthenticationWebFilter.of(manager, tokenProcessor), httpBasic)
                 .addFilterAt(TokenAuthenticationWebFilter.of(tokenProcessor), SecurityWebFiltersOrder.AUTHENTICATION);
 
         http.exceptionHandling()
