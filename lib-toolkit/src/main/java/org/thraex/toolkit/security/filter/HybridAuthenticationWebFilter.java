@@ -15,7 +15,6 @@ import org.springframework.util.Assert;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
-import org.thraex.toolkit.security.constant.AuthenticationMethod;
 import org.thraex.toolkit.security.handler.LoginAuthenticationFailureHandler;
 import reactor.core.publisher.Mono;
 
@@ -29,8 +28,6 @@ public class HybridAuthenticationWebFilter implements WebFilter {
 
     private ReactiveAuthenticationManager authenticationManager;
 
-    private AuthenticationMethod authenticationMethod;
-
     private ServerAuthenticationConverter authenticationConverter;
 
     private ServerAuthenticationSuccessHandler authenticationSuccessHandler;
@@ -38,16 +35,13 @@ public class HybridAuthenticationWebFilter implements WebFilter {
     private ServerAuthenticationFailureHandler authenticationFailureHandler = LoginAuthenticationFailureHandler.of();
 
     public HybridAuthenticationWebFilter(ReactiveAuthenticationManager authenticationManager,
-                                         AuthenticationMethod authenticationMethod,
                                          ServerAuthenticationConverter authenticationConverter,
                                          ServerAuthenticationSuccessHandler authenticationSuccessHandler) {
         Assert.notNull(authenticationManager, "authenticationManager cannot be null");
-        Assert.notNull(authenticationMethod, "authenticationMethod cannot be null");
         Assert.notNull(authenticationConverter, "authenticationConverter cannot be null");
         Assert.notNull(authenticationSuccessHandler, "authenticationSuccessHandler cannot be null");
 
         this.authenticationManager = authenticationManager;
-        this.authenticationMethod = authenticationMethod;
         this.authenticationConverter = authenticationConverter;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
     }
@@ -60,15 +54,16 @@ public class HybridAuthenticationWebFilter implements WebFilter {
                 .filter(ServerWebExchangeMatcher.MatchResult::isMatch)
                 .switchIfEmpty(chain.filter(exchange).then(Mono.empty()))
                 .flatMap(matchResult -> authenticationConverter.convert(exchange))
-                .flatMap(token -> authenticate(filterExchange, token))
+                .map(authentication -> authentication)
+                .flatMap(authentication -> authenticate(filterExchange, authentication))
                 .onErrorResume(AuthenticationException.class,
                         e -> authenticationFailureHandler.onAuthenticationFailure(filterExchange, e));
     }
 
-    private Mono<Void> authenticate(WebFilterExchange exchange, Authentication token) {
-        return authenticationManager.authenticate(token)
-                .switchIfEmpty(Mono.defer(() -> Mono.error(new ProviderNotFoundException("No provider found for " + token.getClass()))))
-                .flatMap(authentication -> authenticationSuccessHandler.onAuthenticationSuccess(exchange, authentication));
+    private Mono<Void> authenticate(WebFilterExchange exchange, Authentication authentication) {
+        return authenticationManager.authenticate(authentication)
+                .switchIfEmpty(Mono.defer(() -> Mono.error(new ProviderNotFoundException("No provider found for " + authentication.getClass()))))
+                .flatMap(auth -> authenticationSuccessHandler.onAuthenticationSuccess(exchange, auth));
     }
 
     public HybridAuthenticationWebFilter setAuthenticationFailureHandler(ServerAuthenticationFailureHandler authenticationFailureHandler) {

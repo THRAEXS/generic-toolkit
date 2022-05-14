@@ -1,4 +1,4 @@
-package org.thraex.toolkit.security.constant;
+package org.thraex.toolkit.security.authentication;
 
 /**
  * @author 鬼王

@@ -3,7 +3,7 @@ package org.thraex.toolkit.security.properties;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.thraex.toolkit.security.constant.AuthenticationMethod;
+import org.thraex.toolkit.security.authentication.AuthenticationMethod;
 
 import java.util.Collections;
 import java.util.Set;

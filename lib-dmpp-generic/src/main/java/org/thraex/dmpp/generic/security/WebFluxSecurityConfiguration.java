@@ -1,5 +1,6 @@
 package org.thraex.dmpp.generic.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration;
@@ -14,7 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.server.WebFilter;
-import org.thraex.toolkit.security.convert.LoginAuthenticationConverter;
+import org.thraex.toolkit.security.convert.HybridAuthenticationConverter;
 import org.thraex.toolkit.security.filter.HybridAuthenticationWebFilter;
 import org.thraex.toolkit.security.filter.TokenAuthenticationWebFilter;
 import org.thraex.toolkit.security.filter.VerificationCodeHandler;
@@ -28,6 +29,8 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
+ * TODO: Minimal configuration
+ *
  * {@link ReactiveUserDetailsServiceAutoConfiguration}
  *
  * @author 鬼王
@@ -42,13 +45,17 @@ public class WebFluxSecurityConfiguration {
 
     private TokenProcessor tokenProcessor;
 
+    private ObjectMapper mapper;
+
     @Autowired(required = false)
     private VerificationCodeHandler verificationCodeHandler;
 
     public WebFluxSecurityConfiguration(SecurityProperties securityProperties,
-                                        TokenProcessor tokenProcessor) {
+                                        TokenProcessor tokenProcessor,
+                                        ObjectMapper mapper) {
         this.securityProperties = securityProperties;
         this.tokenProcessor = tokenProcessor;
+        this.mapper = mapper;
     }
 
     @Bean
@@ -87,8 +94,7 @@ public class WebFluxSecurityConfiguration {
     private WebFilter loginAuthenticationWebFilter(ReactiveAuthenticationManager authenticationManager) {
         return new HybridAuthenticationWebFilter(
                 authenticationManager,
-                securityProperties.getAuthenticationMethod(),
-                LoginAuthenticationConverter.of(tokenProcessor.getPrefix(), tokenProcessor.getPrivateKey()),
+                HybridAuthenticationConverter.of(tokenProcessor.getPrefix(), tokenProcessor.getPrivateKey(), mapper),
                 HybridAuthenticationSuccessHandler.of(this::converter)
         );
     }
