@@ -10,6 +10,7 @@ import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.lang.JoseException;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.util.Assert;
 import org.thraex.toolkit.util.RSAUtil;
 import reactor.util.Logger;
@@ -26,6 +27,7 @@ import java.util.function.Consumer;
  * @author 鬼王
  * @date 2022/03/29 10:37
  */
+@EnableConfigurationProperties(TokenProperties.class)
 public class TokenProcessor {
 
     private Logger logger = Loggers.getLogger(TokenProcessor.class);

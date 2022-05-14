@@ -3,9 +3,7 @@ package org.thraex.dmpp.generic.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
@@ -19,10 +17,9 @@ import org.thraex.toolkit.security.filter.TokenAuthenticationWebFilter;
 import org.thraex.toolkit.security.filter.VerificationCodeHandler;
 import org.thraex.toolkit.security.filter.VerificationCodeWebFilter;
 import org.thraex.toolkit.security.handler.ResponseStatusExceptionHandler;
+import org.thraex.toolkit.security.properties.SecurityProperties;
 import org.thraex.toolkit.security.token.TokenProcessor;
-import org.thraex.toolkit.security.token.TokenProperties;
 
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -33,12 +30,9 @@ import java.util.Set;
  * @date 2022/03/18 16:47
  */
 @ConditionalOnBean(ReactiveUserDetailsService.class)
-@ConfigurationProperties("thraex.security")
 @Import(TokenProcessor.class)
-@EnableConfigurationProperties(TokenProperties.class)
+@EnableConfigurationProperties(SecurityProperties.class)
 public class WebFluxSecurityConfiguration {
-
-    private Set<String> permitted = Collections.EMPTY_SET;
 
     @Autowired(required = false)
     private VerificationCodeHandler verificationCodeHandler;
@@ -49,10 +43,12 @@ public class WebFluxSecurityConfiguration {
     }
 
     @Bean
-    SecurityWebFilterChain securityFilterChain(ApplicationContext context,
-                                               ServerHttpSecurity http,
+    SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http,
                                                ReactiveAuthenticationManager manager,
+                                               SecurityProperties securityProperties,
                                                TokenProcessor tokenProcessor) {
+        Set<String> permitted = securityProperties.getPermitted();
+
         ServerHttpSecurity.AuthorizeExchangeSpec authorizeExchange = http.authorizeExchange();
         if (!permitted.isEmpty()) {
             authorizeExchange.pathMatchers(permitted.toArray(new String[0])).permitAll();
@@ -74,10 +70,6 @@ public class WebFluxSecurityConfiguration {
                 .accessDeniedHandler(ResponseStatusExceptionHandler::denied);
 
         return http.build();
-    }
-
-    public void setPermitted(Set<String> permitted) {
-        this.permitted = permitted;
     }
 
 }
