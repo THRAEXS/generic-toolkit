@@ -19,49 +19,46 @@ import org.springframework.util.Assert;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
+import org.thraex.toolkit.security.constant.AuthenticationMethod;
 import org.thraex.toolkit.security.convert.LoginAuthenticationConverter;
 import org.thraex.toolkit.security.handler.LoginAuthenticationFailureHandler;
 import org.thraex.toolkit.security.handler.LoginAuthenticationSuccessHandler;
 import org.thraex.toolkit.security.token.TokenProcessor;
-import org.thraex.toolkit.security.token.TokenProperties;
 import reactor.core.publisher.Mono;
 
 /**
  * @author 鬼王
- * @date 2022/03/21 22:18
- * @deprecated use
- * {@link HybridAuthenticationWebFilter}
- * instead.
+ * @date 2022/05/15 01:15
  */
-@Deprecated
-public class LoginAuthenticationWebFilter implements WebFilter {
-
-    private final ReactiveAuthenticationManager authenticationManager;
+public class HybridAuthenticationWebFilter implements WebFilter {
 
     private ServerWebExchangeMatcher matcher = ServerWebExchangeMatchers.pathMatchers(HttpMethod.POST, "/auth/login");
 
-    private ServerSecurityContextRepository securityContextRepository = NoOpServerSecurityContextRepository.getInstance();
+    private ReactiveAuthenticationManager authenticationManager;
+
+    private AuthenticationMethod authenticationMethod;
 
     private ServerAuthenticationConverter authenticationConverter;
 
     private ServerAuthenticationSuccessHandler authenticationSuccessHandler;
 
-    private ServerAuthenticationFailureHandler authenticationFailureHandler;
+    private ServerAuthenticationFailureHandler authenticationFailureHandler = LoginAuthenticationFailureHandler.of();
 
-    public LoginAuthenticationWebFilter(ReactiveAuthenticationManager authenticationManager, TokenProcessor tokenProcessor) {
+    private ServerSecurityContextRepository securityContextRepository = NoOpServerSecurityContextRepository.getInstance();
+
+    public HybridAuthenticationWebFilter(ReactiveAuthenticationManager authenticationManager,
+                                         AuthenticationMethod authenticationMethod,
+                                         TokenProcessor tokenProcessor,
+                                         String prefix,
+                                         String privateKey) {
         Assert.notNull(authenticationManager, "authenticationManager cannot be null");
-        Assert.notNull(tokenProcessor, "tokenProcessor cannot be null");
+        Assert.notNull(authenticationMethod, "authenticationMethod cannot be null");
 
         this.authenticationManager = authenticationManager;
+        this.authenticationMethod = authenticationMethod;
+        this.authenticationConverter = LoginAuthenticationConverter.of(prefix, privateKey);
 
-        TokenProperties properties = tokenProcessor.getProperties();
-        this.authenticationConverter = LoginAuthenticationConverter.of(properties.getPrefix(), properties.getPrivateKey());
         this.authenticationSuccessHandler = LoginAuthenticationSuccessHandler.of(tokenProcessor);
-        this.authenticationFailureHandler = LoginAuthenticationFailureHandler.of();
-    }
-
-    public static LoginAuthenticationWebFilter of(ReactiveAuthenticationManager authenticationManager, TokenProcessor tokenProcessor) {
-        return new LoginAuthenticationWebFilter(authenticationManager, tokenProcessor);
     }
 
     @Override
@@ -89,6 +86,36 @@ public class LoginAuthenticationWebFilter implements WebFilter {
         return securityContextRepository.save(exchange.getExchange(), securityContext)
                 .then(authenticationSuccessHandler.onAuthenticationSuccess(exchange, authentication))
                 .contextWrite(ReactiveSecurityContextHolder.withSecurityContext(Mono.just(securityContext)));
+    }
+
+    public HybridAuthenticationWebFilter setAuthenticationManager(ReactiveAuthenticationManager authenticationManager) {
+        Assert.notNull(authenticationManager, "authenticationManager cannot be null");
+        this.authenticationManager = authenticationManager;
+        return this;
+    }
+
+    public HybridAuthenticationWebFilter setAuthenticationMethod(AuthenticationMethod authenticationMethod) {
+        Assert.notNull(authenticationMethod, "authenticationMethod cannot be null");
+        this.authenticationMethod = authenticationMethod;
+        return this;
+    }
+
+    public HybridAuthenticationWebFilter setAuthenticationConverter(ServerAuthenticationConverter authenticationConverter) {
+        Assert.notNull(authenticationConverter, "authenticationConverter cannot be null");
+        this.authenticationConverter = authenticationConverter;
+        return this;
+    }
+
+    public HybridAuthenticationWebFilter setAuthenticationSuccessHandler(ServerAuthenticationSuccessHandler authenticationSuccessHandler) {
+        Assert.notNull(authenticationSuccessHandler, "authenticationSuccessHandler cannot be null");
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
+        return this;
+    }
+
+    public HybridAuthenticationWebFilter setAuthenticationFailureHandler(ServerAuthenticationFailureHandler authenticationFailureHandler) {
+        Assert.notNull(authenticationFailureHandler, "authenticationFailureHandler cannot be null");
+        this.authenticationFailureHandler = authenticationFailureHandler;
+        return this;
     }
 
 }

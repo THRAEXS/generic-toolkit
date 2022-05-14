@@ -120,6 +120,10 @@ public class TokenProcessor {
         return properties;
     }
 
+    public String getPrefix() {
+        return properties.getPrefix();
+    }
+
     public String getPrivateKey() {
         return properties.getPrivateKey();
     }

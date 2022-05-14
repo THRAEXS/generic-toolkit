@@ -12,7 +12,7 @@ import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.thraex.toolkit.security.filter.LoginAuthenticationWebFilter;
+import org.thraex.toolkit.security.filter.HybridAuthenticationWebFilter;
 import org.thraex.toolkit.security.filter.TokenAuthenticationWebFilter;
 import org.thraex.toolkit.security.filter.VerificationCodeHandler;
 import org.thraex.toolkit.security.filter.VerificationCodeWebFilter;
@@ -62,7 +62,12 @@ public class WebFluxSecurityConfiguration {
         Optional.ofNullable(verificationCodeHandler).ifPresent(it ->
                 http.addFilterBefore(new VerificationCodeWebFilter(verificationCodeHandler), httpBasic));
 
-        http.addFilterAt(LoginAuthenticationWebFilter.of(manager, tokenProcessor), httpBasic)
+//        http.addFilterAt(LoginAuthenticationWebFilter.of(manager, tokenProcessor), httpBasic)
+        http.addFilterAt(new HybridAuthenticationWebFilter(manager,
+                        securityProperties.getAuthenticationMethod(),
+                        tokenProcessor,
+                        tokenProcessor.getPrefix(),
+                        tokenProcessor.getPrivateKey()), httpBasic)
                 .addFilterAt(TokenAuthenticationWebFilter.of(tokenProcessor), SecurityWebFiltersOrder.AUTHENTICATION);
 
         http.exceptionHandling()
