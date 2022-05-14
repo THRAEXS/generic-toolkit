@@ -15,9 +15,7 @@ import org.thraex.toolkit.security.writer.ServerHttpResponseWriter;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
-import java.util.function.Function;
 
 
 /**
@@ -31,8 +29,47 @@ public class VerificationCodeWebFilter implements WebFilter {
 
     private ServerWebExchangeMatcher matcher = ServerWebExchangeMatchers.pathMatchers(HttpMethod.POST, "/verification/code/send");
 
+//    private final VerificationCodeHandler handler;
+
+//    public VerificationCodeWebFilter(VerificationCodeHandler handler) {
+//        this.handler = handler;
+//    }
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        Flux<DataBuffer> body1 = exchange.getRequest().getBody();
+//        Flux<Flux<DataBuffer>> map = body1.map(Flux::just);
+        Flux<Mono<DataBuffer>> map1 = body1.map(Mono::just);
+        Flux<Mono<Params>> map2 = map1.map(body -> {
+            Jackson2JsonDecoder decoder = new Jackson2JsonDecoder();
+            ResolvableType elementType = ResolvableType.forClass(Params.class);
+            return decoder.decodeToMono(body, elementType,
+                    MediaType.APPLICATION_JSON, Collections.EMPTY_MAP).cast(Params.class);
+        });
+        Mono<Mono<Params>> next = map2.next();
+        Mono<Params> mono = next.flatMap(it -> it);
+
+        return mono.flatMap(it -> ServerHttpResponseWriter.ok(exchange, ResponseResult.ok(it)));
+
+
+        /*matcher.matches(exchange)
+                .filter(ServerWebExchangeMatcher.MatchResult::isMatch)
+                .switchIfEmpty(chain.filter(exchange).then(Mono.empty()))
+                .map(matchResult -> exchange.getRequest().getBody())
+                .map(body -> {
+                    Jackson2JsonDecoder decoder = new Jackson2JsonDecoder();
+                    ResolvableType elementType = ResolvableType.forClass(Params.class);
+                    return decoder.decodeToMono(body, elementType,
+                            MediaType.APPLICATION_JSON, Collections.EMPTY_MAP).cast(Params.class);
+                });*/
+
+//        return matcher.matches(exchange)
+//                .filter(ServerWebExchangeMatcher.MatchResult::isMatch)
+//                .switchIfEmpty(chain.filter(exchange).then(Mono.empty()))
+//                .flatMap(matchResult -> exchange.getRequest().getBody())
+    }
+
+    public Mono<Void> filter1(ServerWebExchange exchange, WebFilterChain chain) {
         Mono<Params> objectMono = matcher.matches(exchange)
                 .filter(ServerWebExchangeMatcher.MatchResult::isMatch)
                 .switchIfEmpty(chain.filter(exchange).then(Mono.empty()))
