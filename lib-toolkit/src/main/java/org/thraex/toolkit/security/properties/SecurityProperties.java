@@ -1,6 +1,9 @@
 package org.thraex.toolkit.security.properties;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.thraex.toolkit.security.constant.LoginMethod;
 
 import java.util.Collections;
 import java.util.Set;
@@ -14,6 +17,8 @@ public class SecurityProperties {
 
     private Set<String> permitted = Collections.EMPTY_SET;
 
+    private LoginMethod loginMethod = LoginMethod.USERNAME_PASSWORD;
+
     public Set<String> getPermitted() {
         return permitted;
     }
@@ -21,6 +26,20 @@ public class SecurityProperties {
     public SecurityProperties setPermitted(Set<String> permitted) {
         this.permitted = permitted;
         return this;
+    }
+
+    public LoginMethod getLoginMethod() {
+        return loginMethod;
+    }
+
+    public SecurityProperties setLoginMethod(LoginMethod loginMethod) {
+        this.loginMethod = loginMethod;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 
 }

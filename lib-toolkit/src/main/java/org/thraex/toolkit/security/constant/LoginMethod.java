@@ -19,6 +19,6 @@ public enum LoginMethod {
     /**
      * {@link LoginMethod#USERNAME_PASSWORD} + {@link LoginMethod#VERIFICATION_CODE}
      */
-    TOW_FACTOR;
+    TWO_FACTOR;
 
 }
