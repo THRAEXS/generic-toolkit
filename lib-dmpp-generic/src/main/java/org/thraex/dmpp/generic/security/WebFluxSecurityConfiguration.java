@@ -1,9 +1,11 @@
 package org.thraex.dmpp.generic.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
@@ -14,12 +16,14 @@ import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.thraex.toolkit.security.filter.LoginAuthenticationWebFilter;
 import org.thraex.toolkit.security.filter.TokenAuthenticationWebFilter;
+import org.thraex.toolkit.security.filter.VerificationCodeHandler;
 import org.thraex.toolkit.security.filter.VerificationCodeWebFilter;
 import org.thraex.toolkit.security.handler.ResponseStatusExceptionHandler;
 import org.thraex.toolkit.security.token.TokenProcessor;
 import org.thraex.toolkit.security.token.TokenProperties;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -36,13 +40,17 @@ public class WebFluxSecurityConfiguration {
 
     private Set<String> permitted = Collections.EMPTY_SET;
 
+    @Autowired(required = false)
+    private VerificationCodeHandler verificationCodeHandler;
+
     @Bean
     ReactiveAuthenticationManager authenticationManager(ReactiveUserDetailsService service) {
         return new UserDetailsRepositoryReactiveAuthenticationManager(service);
     }
 
     @Bean
-    SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http,
+    SecurityWebFilterChain securityFilterChain(ApplicationContext context,
+                                               ServerHttpSecurity http,
                                                ReactiveAuthenticationManager manager,
                                                TokenProcessor tokenProcessor) {
         ServerHttpSecurity.AuthorizeExchangeSpec authorizeExchange = http.authorizeExchange();
@@ -53,10 +61,14 @@ public class WebFluxSecurityConfiguration {
 
         http.csrf().disable().headers().frameOptions().disable();
 
-        http.addFilterBefore(new VerificationCodeWebFilter(), SecurityWebFiltersOrder.HTTP_BASIC)
-                .addFilterAt(LoginAuthenticationWebFilter.of(manager, tokenProcessor), SecurityWebFiltersOrder.HTTP_BASIC)
-                .addFilterAt(TokenAuthenticationWebFilter.of(tokenProcessor), SecurityWebFiltersOrder.AUTHENTICATION)
-                .exceptionHandling()
+        if (Objects.nonNull(verificationCodeHandler)) {
+            http.addFilterBefore(new VerificationCodeWebFilter(verificationCodeHandler), SecurityWebFiltersOrder.HTTP_BASIC);
+        }
+
+        http.addFilterAt(LoginAuthenticationWebFilter.of(manager, tokenProcessor), SecurityWebFiltersOrder.HTTP_BASIC)
+                .addFilterAt(TokenAuthenticationWebFilter.of(tokenProcessor), SecurityWebFiltersOrder.AUTHENTICATION);
+
+        http.exceptionHandling()
                 .authenticationEntryPoint(ResponseStatusExceptionHandler::unauthorized)
                 .accessDeniedHandler(ResponseStatusExceptionHandler::denied);
 
