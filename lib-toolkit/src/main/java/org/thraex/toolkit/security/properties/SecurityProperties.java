@@ -3,7 +3,7 @@ package org.thraex.toolkit.security.properties;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.thraex.toolkit.security.constant.LoginMethod;
+import org.thraex.toolkit.security.constant.AuthenticationMethod;
 
 import java.util.Collections;
 import java.util.Set;
@@ -17,7 +17,7 @@ public class SecurityProperties {
 
     private Set<String> permitted = Collections.EMPTY_SET;
 
-    private LoginMethod loginMethod = LoginMethod.USERNAME_PASSWORD;
+    private AuthenticationMethod authenticationMethod = AuthenticationMethod.USERNAME_PASSWORD;
 
     public Set<String> getPermitted() {
         return permitted;
@@ -28,12 +28,12 @@ public class SecurityProperties {
         return this;
     }
 
-    public LoginMethod getLoginMethod() {
-        return loginMethod;
+    public AuthenticationMethod getAuthenticationMethod() {
+        return authenticationMethod;
     }
 
-    public SecurityProperties setLoginMethod(LoginMethod loginMethod) {
-        this.loginMethod = loginMethod;
+    public SecurityProperties setAuthenticationMethod(AuthenticationMethod authenticationMethod) {
+        this.authenticationMethod = authenticationMethod;
         return this;
     }
 
