@@ -25,6 +25,7 @@ import reactor.util.Loggers;
  * {@link HybridAuthenticationConverter}
  * instead.
  */
+@Deprecated
 public class LoginAuthenticationConverter implements ServerAuthenticationConverter {
 
     private final Logger logger = Loggers.getLogger(getClass());

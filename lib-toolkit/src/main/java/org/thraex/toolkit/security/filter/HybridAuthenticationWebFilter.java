@@ -15,6 +15,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
+import org.thraex.toolkit.security.authentication.HybridAuthenticationToken;
 import org.thraex.toolkit.security.handler.LoginAuthenticationFailureHandler;
 import reactor.core.publisher.Mono;
 
@@ -54,6 +55,8 @@ public class HybridAuthenticationWebFilter implements WebFilter {
                 .filter(ServerWebExchangeMatcher.MatchResult::isMatch)
                 .switchIfEmpty(chain.filter(exchange).then(Mono.empty()))
                 .flatMap(matchResult -> authenticationConverter.convert(exchange))
+                .cast(HybridAuthenticationToken.class)
+//                TODO: verify
                 .map(authentication -> authentication)
                 .flatMap(authentication -> authenticate(filterExchange, authentication))
                 .onErrorResume(AuthenticationException.class,
