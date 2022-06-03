@@ -60,11 +60,9 @@ public class WebFluxSecurityConfiguration {
 
     @Bean
     ReactiveAuthenticationManager authenticationManager(ReactiveUserDetailsService service) {
-//        return new UserDetailsRepositoryReactiveAuthenticationManager(service);
-//        return new HybridReactiveAuthenticationManager(service);//.setAuthenticationMethod(securityProperties.getAuthenticationMethod());
         HybridReactiveAuthenticationManager authenticationManager = new HybridReactiveAuthenticationManager(service);
         authenticationManager.setAuthenticationMethod(securityProperties.getAuthenticationMethod());
-//        authenticationManager.setVerificationCodeHandler()
+        Optional.ofNullable(verificationCodeHandler).ifPresent(authenticationManager::setVerificationCodeHandler);
 
         return authenticationManager;
     }

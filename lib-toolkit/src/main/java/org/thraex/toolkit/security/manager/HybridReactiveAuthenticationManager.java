@@ -18,6 +18,7 @@ import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -56,7 +57,7 @@ public class HybridReactiveAuthenticationManager extends AbstractUserDetailsReac
 
     private Mono<Authentication> authenticate(Authentication authentication, boolean twoFactor) {
         String username = authentication.getName();
-        String presentedPassword = (String) authentication.getCredentials();
+        String presentedPassword = Optional.ofNullable(authentication.getCredentials()).map(p -> p.toString()).orElse("");
 
         return Mono.just(authentication)
                 .cast(HybridAuthenticationToken.class)
