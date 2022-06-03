@@ -5,6 +5,7 @@ import org.springframework.core.ResolvableType;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
+import org.thraex.toolkit.security.authentication.HybridAuthenticationToken;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -25,6 +26,6 @@ public interface VerificationCodeHandler {
 
     Mono<Integer> convert(Flux<DataBuffer> body);
 
-    boolean verify(Integer code);
+    boolean verify(HybridAuthenticationToken authentication);
 
 }

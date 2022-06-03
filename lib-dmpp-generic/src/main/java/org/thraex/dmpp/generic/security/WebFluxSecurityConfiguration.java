@@ -8,7 +8,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
-import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.Authentication;
@@ -22,6 +21,7 @@ import org.thraex.toolkit.security.filter.VerificationCodeHandler;
 import org.thraex.toolkit.security.filter.VerificationCodeWebFilter;
 import org.thraex.toolkit.security.handler.HybridAuthenticationSuccessHandler;
 import org.thraex.toolkit.security.handler.ResponseStatusExceptionHandler;
+import org.thraex.toolkit.security.manager.HybridReactiveAuthenticationManager;
 import org.thraex.toolkit.security.properties.SecurityProperties;
 import org.thraex.toolkit.security.token.TokenProcessor;
 
@@ -60,7 +60,13 @@ public class WebFluxSecurityConfiguration {
 
     @Bean
     ReactiveAuthenticationManager authenticationManager(ReactiveUserDetailsService service) {
-        return new UserDetailsRepositoryReactiveAuthenticationManager(service);
+//        return new UserDetailsRepositoryReactiveAuthenticationManager(service);
+//        return new HybridReactiveAuthenticationManager(service);//.setAuthenticationMethod(securityProperties.getAuthenticationMethod());
+        HybridReactiveAuthenticationManager authenticationManager = new HybridReactiveAuthenticationManager(service);
+        authenticationManager.setAuthenticationMethod(securityProperties.getAuthenticationMethod());
+//        authenticationManager.setVerificationCodeHandler()
+
+        return authenticationManager;
     }
 
     @Bean
