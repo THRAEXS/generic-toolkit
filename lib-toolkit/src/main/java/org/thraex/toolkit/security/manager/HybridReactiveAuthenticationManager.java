@@ -23,6 +23,9 @@ import java.util.function.Function;
 
 /**
  * TODO: Optimization
+ * <br>
+ * - Two-factor authentication use {@code super.authenticate(authentication)}
+ * - Invalid Verification Code exception
  *
  * @author 鬼王
  * @date 2022/06/03 16:15
