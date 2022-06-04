@@ -34,17 +34,17 @@ public class VerificationCodeWebFilter implements WebFilter {
         return matcher.matches(exchange)
                 .filter(ServerWebExchangeMatcher.MatchResult::isMatch)
                 .switchIfEmpty(chain.filter(exchange).then(Mono.empty()))
-                .flatMap(matchResult -> convert(exchange))
+                .flatMap(matchResult -> send(exchange))
                 .flatMap(it -> ServerHttpResponseWriter.ok(exchange, ResponseResult.ok(it)))
                 .onErrorResume(Exception.class, e -> Mono.error(new IllegalArgumentException(e.getMessage())));
     }
 
-    private Mono<Integer> convert(ServerWebExchange exchange) {
+    private Mono<Boolean> send(ServerWebExchange exchange) {
         return exchange.getRequest().getBody()
                 .switchIfEmpty(Mono.defer(() -> Mono.error(new IllegalArgumentException("Parameter missing"))))
                 .map(Flux::just)
                 .next()
-                .flatMap(handler::convert);
+                .flatMap(handler::send);
     }
 
 }

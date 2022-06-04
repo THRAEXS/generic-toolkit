@@ -24,7 +24,10 @@ public interface VerificationCodeHandler {
         return decoder.decodeToMono(body, elementType, MediaType.APPLICATION_JSON, Collections.EMPTY_MAP);
     }
 
+    @Deprecated
     Mono<Integer> convert(Flux<DataBuffer> body);
+
+    Mono<Boolean> send(Flux<DataBuffer> body);
 
     boolean verify(HybridAuthenticationToken authentication);
 

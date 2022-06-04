@@ -19,6 +19,11 @@ public class NoOpVerificationCodeHandler implements VerificationCodeHandler {
     }
 
     @Override
+    public Mono<Boolean> send(Flux<DataBuffer> body) {
+        return Mono.empty();
+    }
+
+    @Override
     public boolean verify(HybridAuthenticationToken authentication) {
         return false;
     }
