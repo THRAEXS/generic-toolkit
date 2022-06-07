@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ReactiveHttpOutputMessage;
 import org.springframework.http.codec.HttpMessageWriter;
@@ -58,7 +58,7 @@ public class WrapperCodecsConfiguration {
             /**
              * Fix: Compatible with {@link org.springframework.mock.http.server.reactive.MockServerHttpResponse}
              */
-            final HttpStatus status = response.getStatusCode();
+            final HttpStatusCode status = response.getStatusCode();
             final Publisher is = status == null || status.is2xxSuccessful() ? wrapping(inputStream) : inputStream;
             return HttpMessageWriter.super.write(is, actualType, elementType, mediaType, request, response, hints);
         }
