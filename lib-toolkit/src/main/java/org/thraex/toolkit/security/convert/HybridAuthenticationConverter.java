@@ -86,7 +86,7 @@ public class HybridAuthenticationConverter implements ServerAuthenticationConver
 
         private String password;
 
-        private Integer code;
+        private String code;
 
         public String getUsername() {
             return username;
@@ -106,11 +106,11 @@ public class HybridAuthenticationConverter implements ServerAuthenticationConver
             return this;
         }
 
-        public Integer getCode() {
+        public String getCode() {
             return code;
         }
 
-        public Params setCode(Integer code) {
+        public Params setCode(String code) {
             this.code = code;
             return this;
         }

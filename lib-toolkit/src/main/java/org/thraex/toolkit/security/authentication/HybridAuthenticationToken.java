@@ -11,14 +11,14 @@ public class HybridAuthenticationToken extends UsernamePasswordAuthenticationTok
     /**
      * Verification code
      */
-    private final Integer code;
+    private final String code;
 
-    public HybridAuthenticationToken(Object principal, Object credentials, Integer code) {
+    public HybridAuthenticationToken(Object principal, Object credentials, String code) {
         super(principal, credentials);
         this.code = code;
     }
 
-    public Integer getCode() {
+    public String getCode() {
         return code;
     }
 
