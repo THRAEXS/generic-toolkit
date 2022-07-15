@@ -11,8 +11,12 @@ import org.thraex.toolkit.configuration.HandlerRoutingConfiguration;
 import org.thraex.toolkit.configuration.TemporalFormatConfiguration;
 import org.thraex.toolkit.configuration.WrapperCodecsConfiguration;
 import org.thraex.toolkit.exception.HandlerFunctionExceptionHandler;
+import reactor.util.Logger;
+import reactor.util.Loggers;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Spare
@@ -21,6 +25,8 @@ import java.util.List;
  * @date 2022/04/15 22:16
  */
 public class GenericConfigurationRegistrar implements ImportBeanDefinitionRegistrar {
+
+    private static final Logger logger = Loggers.getLogger(GenericConfigurationRegistrar.class);
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
@@ -35,12 +41,21 @@ public class GenericConfigurationRegistrar implements ImportBeanDefinitionRegist
     }
 
     public static List<Class<?>> list() {
-        return List.of(TemporalFormatConfiguration.class,
-                AuditorAwareConfiguration.class,
+        final List<Class<?>> classes = Stream.of(
+                TemporalFormatConfiguration.class,
                 HandlerRoutingConfiguration.class,
                 WrapperCodecsConfiguration.class,
                 HandlerFunctionExceptionHandler.class,
-                Documentation.class);
+                Documentation.class).collect(Collectors.toList());
+
+        try {
+            Class.forName("org.springframework.data.domain.AuditorAware");
+            classes.add(AuditorAwareConfiguration.class);
+        } catch (ClassNotFoundException e) {
+            logger.warn("Class not found: [{}]", e.getMessage());
+        }
+
+        return classes;
     }
 
 }
