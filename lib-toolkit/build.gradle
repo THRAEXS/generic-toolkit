@@ -7,4 +7,6 @@ dependencies {
     api 'org.bitbucket.b_c:jose4j:0.7.12'
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:3.0.0-M3'
+
+    compileOnly 'com.baomidou:mybatis-plus-boot-starter:3.5.2'
 }

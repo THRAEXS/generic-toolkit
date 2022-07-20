@@ -2,11 +2,9 @@ package org.thraex.toolkit.response;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.springframework.data.domain.Page;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -60,7 +58,7 @@ public class ResponseResult<T> implements Serializable {
         return ok().setData(data);
     }
 
-    public static <T> ResponseResult<PageWrapper<T>> ok(Page<T> page) {
+    /*public static <T> ResponseResult<PageWrapper<T>> ok(Page<T> page) {
         Assert.notNull(page, "page must not be null.");
 
         int pages = page.getTotalPages();
@@ -70,7 +68,7 @@ public class ResponseResult<T> implements Serializable {
         List<T> content = page.getContent();
 
         return ok(new PageWrapper(pages, elements, number, size, content));
-    }
+    }*/
 
     public static ResponseResult fail() {
         ResponseStatus status = ResponseStatus.INTERNAL_SERVER_ERROR;
