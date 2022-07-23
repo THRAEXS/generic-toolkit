@@ -1,14 +1,11 @@
 package org.thraex.toolkit.response;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.data.domain.Page;
-import org.springframework.util.ClassUtils;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * TODO: Opt
@@ -101,31 +98,6 @@ public class PageWrapper<T> implements Serializable {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-    }
-
-    public static ResponseResult<?> convert(Object data) {
-        Predicate<String> present = c -> ClassUtils.isPresent(c, null);
-        if (present.test("org.springframework.data.domain.Page") && Page.class.isInstance(data)) {
-            Page<?> page = (Page<?>) data;
-            int pages = page.getTotalPages();
-            long elements = page.getTotalElements();
-            int number = page.getNumber();
-            int size = page.getSize();
-            List<?> content = page.getContent();
-
-            return ResponseResult.ok(new PageWrapper(pages, elements, number, size, content));
-        } else if (present.test("com.baomidou.mybatisplus.core.metadata.IPage") && IPage.class.isInstance(data)) {
-            IPage<?> page = (IPage<?>) data;
-            long pages = page.getPages();
-            long elements = page.getTotal();
-            long number = page.getCurrent();
-            long size = page.getSize();
-            List<?> content = page.getRecords();
-
-            return ResponseResult.ok(new PageWrapper((int) pages, elements, (int) number, (int) size, content));
-        }
-
-        return ResponseResult.ok(data);
     }
 
 }
