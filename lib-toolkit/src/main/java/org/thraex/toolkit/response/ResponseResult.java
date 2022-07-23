@@ -58,18 +58,6 @@ public class ResponseResult<T> implements Serializable {
         return ok().setData(data);
     }
 
-    /*public static <T> ResponseResult<PageWrapper<T>> ok(Page<T> page) {
-        Assert.notNull(page, "page must not be null.");
-
-        int pages = page.getTotalPages();
-        long elements = page.getTotalElements();
-        int number = page.getNumber();
-        int size = page.getSize();
-        List<T> content = page.getContent();
-
-        return ok(new PageWrapper(pages, elements, number, size, content));
-    }*/
-
     public static ResponseResult fail() {
         ResponseStatus status = ResponseStatus.INTERNAL_SERVER_ERROR;
         return of(status, null, status.phrase());

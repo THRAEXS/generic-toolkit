@@ -2,7 +2,6 @@ package org.thraex.dmpp.generic.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +23,7 @@ import org.thraex.toolkit.security.handler.ResponseStatusExceptionHandler;
 import org.thraex.toolkit.security.manager.HybridReactiveAuthenticationManager;
 import org.thraex.toolkit.security.properties.SecurityProperties;
 import org.thraex.toolkit.security.token.TokenProcessor;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 import java.util.Set;
@@ -36,7 +36,6 @@ import java.util.Set;
  * @author 鬼王
  * @date 2022/03/18 16:47
  */
-@ConditionalOnBean(ReactiveUserDetailsService.class)
 @Import(TokenProcessor.class)
 @EnableConfigurationProperties(SecurityProperties.class)
 public class WebFluxSecurityConfiguration {
@@ -59,7 +58,8 @@ public class WebFluxSecurityConfiguration {
     }
 
     @Bean
-    ReactiveAuthenticationManager authenticationManager(ReactiveUserDetailsService service) {
+    ReactiveAuthenticationManager authenticationManager(@Autowired(required = false) ReactiveUserDetailsService userDetailsService) {
+        ReactiveUserDetailsService service = Optional.ofNullable(userDetailsService).orElse(username -> Mono.empty());
         HybridReactiveAuthenticationManager authenticationManager = new HybridReactiveAuthenticationManager(service);
         authenticationManager.setAuthenticationMethod(securityProperties.getAuthenticationMethod());
         Optional.ofNullable(verificationCodeHandler).ifPresent(authenticationManager::setVerificationCodeHandler);
