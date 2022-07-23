@@ -14,6 +14,7 @@ import org.springframework.http.ReactiveHttpOutputMessage;
 import org.springframework.http.codec.HttpMessageWriter;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.thraex.toolkit.response.PageWrapper;
 import org.thraex.toolkit.response.ResponseResult;
 import reactor.core.publisher.Mono;
 import reactor.util.Logger;
@@ -79,7 +80,7 @@ public class WrapperCodecsConfiguration {
         }
 
         private Publisher wrapping(Publisher publisher) {
-            return Mono.from(publisher).map(data -> ResponseResult.class.isInstance(data) ? data : ResponseResult.ok(data));
+            return Mono.from(publisher).map(data -> ResponseResult.class.isInstance(data) ? data : PageWrapper.convert(data));
         }
 
         private String mapper(Object value) {
