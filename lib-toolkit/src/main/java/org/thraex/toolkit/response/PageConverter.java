@@ -1,6 +1,7 @@
 package org.thraex.toolkit.response;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.github.pagehelper.PageInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.util.ClassUtils;
 
@@ -33,6 +34,16 @@ public enum PageConverter {
         List<?> content = page.getRecords();
 
         return new PageWrapper((int) pages, elements, (int) number, (int) size, content);
+    }),
+    PAGE_HELPER("com.github.pagehelper.PageInfo", data -> {
+        PageInfo<?> page = (PageInfo<?>) data;
+        int pages = page.getPages();
+        long elements = page.getTotal();
+        int number = page.getPageNum();
+        int size = page.getPageSize();
+        List<?> content = page.getList();
+
+        return new PageWrapper<>(pages, elements, number, size, content);
     });
 
     private final String name;
@@ -51,6 +62,8 @@ public enum PageConverter {
             return SPRING_DATA.converter.apply(data);
         } else if (present.test(MYBATIS_PLUS.name) && IPage.class.isInstance(data)) {
             return MYBATIS_PLUS.converter.apply(data);
+        } else if (present.test(PAGE_HELPER.name) && PageInfo.class.isInstance(data)) {
+            return PAGE_HELPER.converter.apply(data);
         }
 
         return null;
