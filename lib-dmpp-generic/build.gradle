@@ -7,7 +7,7 @@ dependencies {
     api 'mysql:mysql-connector-java:8.0.30'
     api 'org.apache.commons:commons-lang3:3.12.0'
     api 'com.google.guava:guava:31.1-jre'
-    api 'cn.hutool:hutool-all:5.8.0.M2'
+    api 'cn.hutool:hutool-all:5.8.3'
 
     api project(String.format('%s:lib-toolkit', depth > 1 ? String.format(':%s', parent.name) : ''))
 }
