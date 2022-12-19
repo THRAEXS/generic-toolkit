@@ -5,6 +5,7 @@ import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.util.ClassUtils;
 import org.thraex.dmpp.generic.doc.Documentation;
 import org.thraex.toolkit.configuration.AuditorAwareConfiguration;
 import org.thraex.toolkit.configuration.HandlerRoutingConfiguration;
@@ -13,6 +14,10 @@ import org.thraex.toolkit.configuration.WrapperCodecsConfiguration;
 import org.thraex.toolkit.exception.HandlerFunctionExceptionHandler;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Spare
@@ -35,12 +40,17 @@ public class GenericConfigurationRegistrar implements ImportBeanDefinitionRegist
     }
 
     public static List<Class<?>> list() {
-        return List.of(TemporalFormatConfiguration.class,
-                AuditorAwareConfiguration.class,
+        // TODO: Optimization
+        Supplier<Class<?>> supplier = () -> ClassUtils.isPresent("org.springframework.data.domain.AuditorAware",
+                null) ? AuditorAwareConfiguration.class : null;
+
+        return Stream.of(
+                TemporalFormatConfiguration.class,
                 HandlerRoutingConfiguration.class,
                 WrapperCodecsConfiguration.class,
                 HandlerFunctionExceptionHandler.class,
-                Documentation.class);
+                Documentation.class,
+                supplier.get()).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
 }

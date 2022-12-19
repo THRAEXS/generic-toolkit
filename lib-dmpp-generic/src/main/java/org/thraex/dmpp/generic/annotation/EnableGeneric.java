@@ -27,4 +27,10 @@ public @interface EnableGeneric {
      */
     boolean genericRouterFunction() default true;
 
+    /**
+     * Whether to enable web flux security. See {@link EnableGenericSecurity}
+     * @return
+     */
+    boolean enableWebFluxSecurity() default false;
+
 }

@@ -13,7 +13,11 @@ import reactor.util.Loggers;
 /**
  * @author 鬼王
  * @date 2022/03/22 17:40
+ * @deprecated use
+ * {@link HybridAuthenticationSuccessHandler}
+ * instead.
  */
+@Deprecated
 public class LoginAuthenticationSuccessHandler implements ServerAuthenticationSuccessHandler {
 
     private final Logger logger = Loggers.getLogger(getClass());

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.data.domain.Page;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
  * @author 鬼王
  * @date 2022/03/16 15:44
  */
-public class PageWrapper<T> {
+public class PageWrapper<T> implements Serializable {
 
     /**
      * {@link Page#getTotalPages()}

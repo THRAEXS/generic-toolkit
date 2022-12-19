@@ -6,11 +6,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
+import org.springframework.util.Assert;
 import org.springframework.web.server.ServerWebExchange;
 import org.thraex.toolkit.response.ResponseStatus;
+import org.thraex.toolkit.security.authentication.HybridAuthenticationToken;
 import org.thraex.toolkit.util.RSAUtil;
 import reactor.core.publisher.Mono;
 import reactor.util.Logger;
@@ -20,13 +21,9 @@ import reactor.util.Loggers;
  * TODO: Opt Exception
  *
  * @author 鬼王
- * @date 2022/03/22 18:44
- * @deprecated use
- * {@link HybridAuthenticationConverter}
- * instead.
+ * @date 2022/05/15 03:22
  */
-@Deprecated
-public class LoginAuthenticationConverter implements ServerAuthenticationConverter {
+public class HybridAuthenticationConverter implements ServerAuthenticationConverter {
 
     private final Logger logger = Loggers.getLogger(getClass());
 
@@ -34,13 +31,18 @@ public class LoginAuthenticationConverter implements ServerAuthenticationConvert
 
     private final String privateKey;
 
-    public LoginAuthenticationConverter(String prefix, String privateKey) {
+    private final ObjectMapper mapper;
+
+    public HybridAuthenticationConverter(String prefix, String privateKey, ObjectMapper mapper) {
+        Assert.notNull(mapper, "mapper cannot be null");
+
         this.prefix = prefix;
         this.privateKey = privateKey;
+        this.mapper = mapper;
     }
 
-    public static LoginAuthenticationConverter of(String prefix, String privateKey) {
-        return new LoginAuthenticationConverter(prefix, privateKey);
+    public static HybridAuthenticationConverter of(String prefix, String privateKey, ObjectMapper mapper) {
+        return new HybridAuthenticationConverter(prefix, privateKey, mapper);
     }
 
     @Override
@@ -68,10 +70,9 @@ public class LoginAuthenticationConverter implements ServerAuthenticationConvert
 
         try {
             String decrypted = RSAUtil.decrypt(token, privateKey);
-            ObjectMapper mapper = new ObjectMapper();
             Params params = mapper.readValue(decrypted, Params.class);
 
-            return Mono.just(new UsernamePasswordAuthenticationToken(params.getUsername(), params.getPassword()));
+            return Mono.just(new HybridAuthenticationToken(params.getUsername(), params.getPassword(), params.getCode()));
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

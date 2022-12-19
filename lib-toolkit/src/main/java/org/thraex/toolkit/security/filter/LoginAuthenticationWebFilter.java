@@ -29,7 +29,11 @@ import reactor.core.publisher.Mono;
 /**
  * @author 鬼王
  * @date 2022/03/21 22:18
+ * @deprecated use
+ * {@link HybridAuthenticationWebFilter}
+ * instead.
  */
+@Deprecated
 public class LoginAuthenticationWebFilter implements WebFilter {
 
     private final ReactiveAuthenticationManager authenticationManager;

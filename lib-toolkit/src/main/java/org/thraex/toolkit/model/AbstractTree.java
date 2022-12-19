@@ -7,6 +7,7 @@ import jakarta.persistence.OneToOne;
 import org.thraex.toolkit.entity.SoftEntity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -46,7 +47,7 @@ public abstract class AbstractTree<T extends AbstractTree<T>>
      *     {@code @JoinColumn(name = "parent_id")}
      * </pre>
      */
-    private transient List<T> children;
+    private transient List<T> children = new ArrayList<>();
 
     public String getName() {
         return name;

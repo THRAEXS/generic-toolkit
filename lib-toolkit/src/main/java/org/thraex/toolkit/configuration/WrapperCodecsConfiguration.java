@@ -8,12 +8,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ReactiveHttpOutputMessage;
 import org.springframework.http.codec.HttpMessageWriter;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.thraex.toolkit.response.PageConverter;
+import org.thraex.toolkit.response.PageWrapper;
 import org.thraex.toolkit.response.ResponseResult;
 import reactor.core.publisher.Mono;
 import reactor.util.Logger;
@@ -24,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author 鬼王
@@ -58,7 +61,7 @@ public class WrapperCodecsConfiguration {
             /**
              * Fix: Compatible with {@link org.springframework.mock.http.server.reactive.MockServerHttpResponse}
              */
-            final HttpStatus status = response.getStatusCode();
+            final HttpStatusCode status = response.getStatusCode();
             final Publisher is = status == null || status.is2xxSuccessful() ? wrapping(inputStream) : inputStream;
             return HttpMessageWriter.super.write(is, actualType, elementType, mediaType, request, response, hints);
         }
@@ -79,7 +82,12 @@ public class WrapperCodecsConfiguration {
         }
 
         private Publisher wrapping(Publisher publisher) {
-            return Mono.from(publisher).map(data -> ResponseResult.class.isInstance(data) ? data : ResponseResult.ok(data));
+            Function<Object, ResponseResult<?>> converter = data -> {
+                PageWrapper<?> page = PageConverter.to(data);
+                return ResponseResult.ok(page == null ? data : page);
+            };
+
+            return Mono.from(publisher).map(data -> ResponseResult.class.isInstance(data) ? data : converter.apply(data));
         }
 
         private String mapper(Object value) {
