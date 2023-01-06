@@ -17,6 +17,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 /**
+ * TODO: Optimize. use {@link org.springframework.data.jpa.domain.AbstractAuditable}
+ *
  * @author 鬼王
  * @date 2021/07/16 16:45
  */
