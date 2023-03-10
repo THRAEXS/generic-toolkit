@@ -26,6 +26,11 @@ public class TemporalFormatConfiguration {
     private static final String FORMAT_TIME = "HH:mm:ss";
     private static final String FORMAT_DATE_TIME = "yyyy-MM-dd HH:mm:ss";
 
+    /**
+     * {@link org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration.JacksonObjectMapperConfiguration#jacksonObjectMapper}
+     *
+     * @return
+     */
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jacksonObjectMapperBuilderCustomizer() {
         DateTimeFormatter date = DateTimeFormatter.ofPattern(FORMAT_DATE);
